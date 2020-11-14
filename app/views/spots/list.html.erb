@@ -5,7 +5,14 @@
     </div>
     <div class="col-sm">
     <h1>spot list</h1>
-      <div><%= link_to "see",show_path  %></div>
+
+    <ul>
+      <% @spots.each do |spot|  %>
+     <li> <%= link_to spot.name, show_path(spot.id) %> </li>
+    <% end %>
+    </ul>
+
+      <!-- <div><%#= link_to "see",show_path  %></div> -->
       <div><%= link_to "new spot",new_path  %></div>
       <div><%= link_to "wizard", wizard_path  %></div>
     </div>
