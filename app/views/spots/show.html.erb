@@ -4,7 +4,32 @@
       <!-- vide -->
     </div>
     <div class="col-sm">
-    <h1> spot description </h1>
+
+    <h1><%= @spot.name %></h1>
+    <p><%= @spot.configuration %></p>
+    <p><%= @spot.label %></p>
+    <p><%= @spot.latitude %></p>
+    <p><%= @spot.longitude %></p>
+    <p><%= @spot.wind_force_maxi %></p>
+    <p><%= @spot.wind_force_mini %></p>
+    <p><%= @spot.wind_direction %></p>
+    <p><%= @spot.tide_mini %></p>
+    <p><%= @spot.tide_max %></p>
+    <p><%= @spot.low_tide %></p>
+    <p><%= @spot.mid_tide %></p>
+    <p><%= @spot.high_tide %></p>
+    <p><%= @spot.coeff_mini %></p>
+    <p><%= @spot.coeff_maxi %></p>
+    <p><%= @spot.wave_direction %></p>
+    <p><%= @spot.wave_height_mini %></p>
+    <p><%= @spot.wave_height_maxi %></p>
+    <p><%= @spot.periode_mini %></p>
+    <p><%= @spot.periode_maxi %></p>
+    <p><%= @spot.windfinder %></p>
+    <p><%= @spot.windfindersuper %></p>
+    <p><%= @spot.shom %></p>
+
+
     <div><%= link_to "back", list_path  %></div>
     </div>
     <div class="col-sm">
@@ -12,6 +37,4 @@
     </div>
   </div>
 </div>
-
-
 
