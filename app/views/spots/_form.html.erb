@@ -1,0 +1,28 @@
+    <%= simple_form_for (spot) do |f| %>
+      <%= f.input :name %>
+      <%= f.input :configuration %>
+      <%= f.input :label %>
+      <%= f.input :latitude, required:false %>
+      <%= f.input :longitude,required:false %>
+      <%= f.input :wind_force_maxi,required:false %>
+      <%= f.input :wind_force_mini,required:false %>
+      <%= f.input :wind_direction,required:false %>
+      <%= f.input :tide_mini,required:false %>
+      <%= f.input :tide_max,required:false %>
+      <%= f.input :low_tide,required:false %>
+      <%= f.input :mid_tide,required:false %>
+      <%= f.input :high_tide,required:false %>
+      <%= f.input :coeff_mini,required:false %>
+      <%= f.input :coeff_maxi,required:false %>
+      <%= f.input :wave_direction,required:false %>
+      <%= f.input :wave_height_mini,required:false %>
+      <%= f.input :wave_height_maxi,required:false %>
+      <%= f.input :periode_mini,required:false %>
+      <%= f.input :periode_maxi,required:false %>
+      <%= f.input :windfinder,required:false %>
+      <%= f.input :windfindersuper,required:false %>
+      <%= f.input :shom,required:false %>
+
+      <%= f.submit %>
+    <% end %>
+
