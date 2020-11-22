@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PostTest < ActiveSupport::TestCase
+class WindfinderSuperJobTest < ActiveJob::TestCase
   # test "the truth" do
   #   assert true
   # end

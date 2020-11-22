@@ -1,4 +1,10 @@
+require 'nokogiri'
+require 'pry'
+require 'date'
+require 'open-uri'
+
 class SpotsController < ApplicationController
+  include Windfinder
   before_action :set_spot, only: [:show, :destroy, :edit, :update]
 
   def index
@@ -34,7 +40,23 @@ class SpotsController < ApplicationController
     redirect_to spots_path
   end
 
-  def wizard; end
+  def wizard
+    debut = Time.now
+
+    @spot_list = Spot.all
+
+    url = @spot_list.first.windfinder
+    tide_mini = @spot_list.first.tide_mini
+    tide_max = @spot_list.first.tide_max
+    tide_max = @spot_list.first.tide_max
+    exposition = @spot_list.first.wind_direction
+
+    @result = Windfinder.windfinder_forecast(url, tide_mini, tide_max, exposition)
+
+      fin = Time.now
+      @perf = fin - debut
+
+  end
 
   def options; end
 
@@ -42,6 +64,10 @@ class SpotsController < ApplicationController
 
   def spot_params
     params.require(:spot).permit(:name, :sport, :configuration, :label, :latitude, :longitude, :wind_force_maxi, :wind_force_mini, :wind_direction, :tide_mini, :tide_max, :low_tide, :mid_tide, :high_tide, :coeff_mini, :coeff_maxi, :wave_direction, :wave_height_mini, :wave_height_maxi, :periode_mini, :periode_maxi, :windfinder, :windfindersuper, :shom )
+  end
+
+  def standard_data_set_params
+    params.require(:standard_data_set).permit(:model_name, :spot_name, :data_day_name, :data_time, :data_hour, :data_tide, :data_ws, :data_wg, :data_wdeg, :data_wdir)
   end
 
   def set_spot

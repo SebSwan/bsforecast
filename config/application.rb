@@ -10,6 +10,12 @@ module Bsforecast
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
+    config.eager_load_paths += %W(#{config.root}/lib/windfinder) #load personal librarary on the model PORO
+    # config.eager_load_paths += %W(#{config.root}/lib/windfinder/superwindfinder.rb)
+    config.eager_load_paths += %W(#{config.root}/lib/tools)
+    config.eager_load_paths += %W(#{config.root}/lib/shom)
+
+    # config.eager_load_paths << Rails.root.join('lib')
 
 
     # Settings in config/environments/* take precedence over those specified here.

@@ -1,18 +1,31 @@
 <div class="container">
   <div class="row">
-    <div class="col-sm">
+    <div class="col-2">
       <!-- vide -->
     </div>
-    <div class="col-sm">
+    <div class="col-8 white">
       <h1> resultat du wizard</h1>
+      <ul>
+      <% @result.each do |r|%>
+      <li> <%= r[:name] + ' ' + r[:day_name] + ' ' + r[:time_stamp].to_s + ' ' + r[:hour].to_s + ' ' + r[:wind_force].to_s + '|' + r[:wind_gust].to_s + ' ' + r[:wind_direction] + ' ' + (r[:tide_height] == nil ? 'no-tide' :(r[:tide_height] / 10.0).to_s+"m") +'|' + (r[:wave_height] / (10.0)).to_s + 'm ' + r[:wave_direction].to_s + 'deg ' + r[:wave_period].to_s + 's' + ' ' +r[:model] %> </li>
+        <% end %>
+      </ul>
+      <div> <%= @spot %> </div>
+
+      <div><%= @test  %> </div>
+
+      <div><%=  @perf %> </div>
+
       <div><%= link_to "spot list",spots_path  %></div>
       <div><%= link_to "options", options_path  %></div>
 
     </div>
-    <div class="col-sm">
+    <div class="col-2">
       <!-- vide -->
     </div>
   </div>
 </div>
+
+      <%# <li> <%= r[:name] + ' ' + r[:day_name] + ' ' + r[:time_stamp].to_s + ' ' + r[:hour].to_s + ' ' + r[:wind_force].to_s + '|' + r[:wind_gust].to_s + ' ' + r[:wind_direction] + ' ' + (r[:tide_height] == nil ? 'no-tide' :(r[:tide_height] / 10.0).to_s+"m") +'|' + (r[:wave_height] / (10.0)).to_s + 'm ' + r[:wave_direction].to_s + 'deg ' + r[:wave_period].to_s + 's' + ' ' +r[:model] } %> </li> %>
 
 

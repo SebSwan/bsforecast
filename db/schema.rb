@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_11_105829) do
+ActiveRecord::Schema.define(version: 2020_11_21_213101) do
 
   create_table "spots", force: :cascade do |t|
     t.string "name"
@@ -37,6 +37,21 @@ ActiveRecord::Schema.define(version: 2020_11_11_105829) do
     t.string "windfinder"
     t.string "windfindersuper"
     t.string "shom"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "standard_data_sets", force: :cascade do |t|
+    t.string "model"
+    t.string "spot_name"
+    t.string "data_day_name"
+    t.date "data_time"
+    t.date "data_hour"
+    t.date "data_tide"
+    t.integer "data_ws"
+    t.integer "data_wg"
+    t.integer "data_wdeg"
+    t.integer "data_wdir"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

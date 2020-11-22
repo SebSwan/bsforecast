@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  model_name: MyString
+  spot_name: MyString
+  data_day_name: MyString
+  data_time: 2020-11-21
+  data_hour: 2020-11-21
+  data_tide: 2020-11-21
+  data_ws: 1
+  data_wg: 1
+  data_wdeg: 1
+  data_wdir: 1
+
+two:
+  model_name: MyString
+  spot_name: MyString
+  data_day_name: MyString
+  data_time: 2020-11-21
+  data_hour: 2020-11-21
+  data_tide: 2020-11-21
+  data_ws: 1
+  data_wg: 1
+  data_wdeg: 1
+  data_wdir: 1
