@@ -6,8 +6,9 @@
     <div class="col-8 white">
       <h1> resultat du wizard</h1>
       <ul>
+      <%# <% binding.pry %>
       <% @result.each do |r|%>
-      <li> <%= r[:name] + ' ' + r[:day_name] + ' ' + r[:time_stamp].to_s + ' ' + r[:hour].to_s + ' ' + r[:wind_force].to_s + '|' + r[:wind_gust].to_s + ' ' + r[:wind_direction] + ' ' + (r[:tide_height] == nil ? 'no-tide' :(r[:tide_height] / 10.0).to_s+"m") +'|' + (r[:wave_height] / (10.0)).to_s + 'm ' + r[:wave_direction].to_s + 'deg ' + r[:wave_period].to_s + 's' + ' ' +r[:model] %> </li>
+      <li> <%= r[:name] + ' ' + r[:day_name] + ' ' + r[:time_stamp].to_s + ' ' + r[:hour].to_s + ' ' + r[:wind_force].to_s + '|' + r[:wind_gust].to_s + ' ' + r[:wind_direction] + ' ' + (r[:tide_height] == nil ? 'no-tide' :(r[:tide_height]).to_s+"m") +' | ' + (r[:wave_height] / (10.0)).to_s + ' m ' + r[:wave_direction].to_s + r[:wave_period].to_s + 's' + ' ' +r[:model] %> </li>
         <% end %>
       </ul>
       <div> <%= @spot %> </div>
@@ -27,5 +28,6 @@
 </div>
 
       <%# <li> <%= r[:name] + ' ' + r[:day_name] + ' ' + r[:time_stamp].to_s + ' ' + r[:hour].to_s + ' ' + r[:wind_force].to_s + '|' + r[:wind_gust].to_s + ' ' + r[:wind_direction] + ' ' + (r[:tide_height] == nil ? 'no-tide' :(r[:tide_height] / 10.0).to_s+"m") +'|' + (r[:wave_height] / (10.0)).to_s + 'm ' + r[:wave_direction].to_s + 'deg ' + r[:wave_period].to_s + 's' + ' ' +r[:model] } %> </li> %>
+      <%# <li> <%= r[1][:name] + ' ' + r[1][:day_name] + ' ' + r[1][:time_stamp].to_s + ' ' + r[1][:hour].to_s + ' ' + r[1][:wind_force].to_s + '|' + r[1][:wind_gust].to_s + ' ' + r[1][:wind_direction] + ' ' + (r[1][:tide_height] == nil ? 'no-tide' :(r[1][:tide_height]).to_s+"m") +' | ' + (r[1][:wave_height] / (10.0)).to_s + ' m ' + r[1][:wave_direction].to_s + r[1][:wave_period].to_s + 's' + ' ' +r[1][:model] %> </li> %>
 
 

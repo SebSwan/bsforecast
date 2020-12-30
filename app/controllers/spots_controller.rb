@@ -4,8 +4,9 @@ require 'date'
 require 'open-uri'
 
 class SpotsController < ApplicationController
-  include Windfinder
   before_action :set_spot, only: [:show, :destroy, :edit, :update]
+  # session[:init] = true
+  # include Windfinder
 
   def index
     @spots = Spot.all
@@ -48,30 +49,35 @@ class SpotsController < ApplicationController
     url = @spot_list.first.windfinder
     tide_mini = @spot_list.first.tide_mini
     tide_max = @spot_list.first.tide_max
-    tide_max = @spot_list.first.tide_max
     exposition = @spot_list.first.wind_direction
 
-    @result = Windfinder.windfinder_forecast(url, tide_mini, tide_max, exposition)
+    data_set = Windfinder.dataset(url)
+    result1 = Windfinder.sort(data_set)
+    result2 = Windfinder.sort_by_tide(result1, tide_mini, tide_max)
+    @result = Windfinder.sort_by_wind_direction(result2, exposition)
 
-    @result.each do |model|
-    StandardDataSet.create(
-      :spot_name => model[:name],
-      :model => model[:model],
-      :data_day_name => model[:day_name],
-      :data_time => DateTime.parse(model[:hour]),
-      :data_tide => DateTime.parse(model[:hour]),
-      :data_hour => DateTime.parse(model[:hour]),
-      :data_ws => model[:wind_force],
-      :data_wg => model[:wind_gust],
-      :data_wdeg => model[:wind_degree],
-      :data_wdir => model[:wave_direction]
-    )
+    # @result = Windfinder.windfinder_forecast(url, tide_mini, tide_max, exposition)
 
-    end
+
+    # binding.pry
+    # @result.each do |model|
+    # StandardDataSet.create(
+    #   :spot_name => model[:name],
+    #   :model => model[:model],
+    #   :data_day_name => model[:day_name],
+    #   :data_time => DateTime.parse(model[:hour]),
+    #   :data_tide => DateTime.parse(model[:hour]),
+    #   :data_hour => DateTime.parse(model[:hour]),
+    #   :data_ws => model[:wind_force],
+    #   :data_wg => model[:wind_gust],
+    #   :data_wdeg => model[:wind_degree],
+    #   :data_wdir => model[:wave_direction]
+    # )
+
+    # end
 
       fin = Time.now
       @perf = fin - debut
-    binding.pry
   end
 
   def options; end
