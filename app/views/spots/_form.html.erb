@@ -1,9 +1,15 @@
     <%= simple_form_for (spot) do |f| %>
       <%= f.input :name,label: false,placeholder: "spot name" %>
       <%#= f.input :configuration %>
-      <%= f.input :label, label: false,placeholder: "short name, appear in the wizard" %>
+      <%= f.input :label, label: false, placeholder: "short name, appear in the wizard" %>
       <%= f.input :sport, as: :radio_buttons, collection: Spot::SPORT ,wrapper: :horizontal_collection_inline %>
-      <%= f.input :wind_direction,required:false, as: :check_boxes, collection: ['N','NNW','NW','WNW','W','WSW','SW','SSW','S','SSE','SE','ESE','E','ENE','NE','NNE'] %>
+      <%= f.collection_check_boxes :wind_direction_ids, WindDirection.all, :id, :direction do |b| %>
+        <div class="collection-check-box">
+          <%= b.check_box %>
+          <%= b.label %>
+        </div>
+      <% end %>
+      <%#= f.input :wind_direction,required:false, as: :check_boxes, collection: Spot::DIRECTION %>
       <%= f.input :wind_force_mini,required:false, label:false, prompt: "Wind Force Minimum (Knots)", collection: 1..45 %>
       <%= f.input :wind_force_maxi,required:false, label:false, prompt: "Wind Force Maximum (Knots)", collection: 1..45 %>
       <%= f.input :tide_mini,required:false, label:false, prompt: "Tide minimum height", collection: 1..12 %>
