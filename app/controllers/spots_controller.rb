@@ -46,10 +46,6 @@ class SpotsController < ApplicationController
 
     @spot_list = Spot.all
 
-    # url = @spot_list.first.windfinder
-
-    # spot = @spot_list.first
-
     def WindfinderOneSpot(spot)
       data_set = Windfinder.dataset(spot[:windfinder])
       result1 = Windfinder.sort(data_set,spot)
@@ -66,28 +62,8 @@ class SpotsController < ApplicationController
     end
 
     @result = WindfinderMultiSpot(@spot_list)
-    # @result = Windfinder.windfinder_forecast(url, tide_mini, tide_max, exposition)
-
-
-    # binding.pry
-    # @result.each do |model|
-    # StandardDataSet.create(
-    #   :spot_name => model[:name],
-    #   :model => model[:model],
-    #   :data_day_name => model[:day_name],
-    #   :data_time => DateTime.parse(model[:hour]),
-    #   :data_tide => DateTime.parse(model[:hour]),
-    #   :data_hour => DateTime.parse(model[:hour]),
-    #   :data_ws => model[:wind_force],
-    #   :data_wg => model[:wind_gust],
-    #   :data_wdeg => model[:wind_degree],
-    #   :data_wdir => model[:wave_direction]
-    # )
-
-    # end
-
-      fin = Time.now
-      @perf = fin - debut
+    fin = Time.now
+    @perf = fin - debut
   end
 
   def options; end
