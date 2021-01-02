@@ -50,11 +50,12 @@ class SpotsController < ApplicationController
     tide_mini = @spot_list.first.tide_mini
     tide_max = @spot_list.first.tide_max
     exposition = @spot_list.first.wind_direction
+    spot = @spot_list.first
 
-    p data_set = Windfinder.dataset(url)
-    pp result1 = Windfinder.sort(data_set)
-    pp pp result2 = Windfinder.sort_by_tide(result1, tide_mini, tide_max)
-    pp @result = Windfinder.sort_by_wind_direction(result2, exposition)
+    data_set = Windfinder.dataset(url)
+    result1 = Windfinder.sort(data_set)
+    result2 = Windfinder.sort_by_tide(result1, tide_mini, tide_max)
+    @result = Windfinder.sort_by_wind_direction(result2, spot)
 
     # @result = Windfinder.windfinder_forecast(url, tide_mini, tide_max, exposition)
 
@@ -85,7 +86,7 @@ class SpotsController < ApplicationController
   private
 
   def spot_params
-    params.require(:spot).permit(:name, :sport, :configuration, :label, :latitude, :longitude, :wind_force_maxi, :wind_force_mini, :tide_mini, :tide_max, :low_tide, :mid_tide, :high_tide, :coeff_mini, :coeff_maxi, :wave_direction, :wave_height_mini, :wave_height_maxi, :periode_mini, :periode_maxi, :windfinder, :windfindersuper, :shom, wind_direction_ids:[])
+    params.require(:spot).permit(:name, :sport, :configuration, :label, :latitude, :longitude, :wind_force_maxi, :wind_force_mini, :tide_mini, :tide_max, :low_tide, :mid_tide, :high_tide, :coeff_mini, :coeff_maxi, :wave_height_mini, :wave_height_maxi, :periode_mini, :periode_maxi, :windfinder, :windfindersuper, :shom, wind_direction_ids:[],wave_direction_ids:[])
   end
 
   def standard_data_set_params

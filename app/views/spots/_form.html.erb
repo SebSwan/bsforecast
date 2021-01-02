@@ -19,7 +19,14 @@
       <%= f.input :high_tide,required:false %>
       <%= f.input :coeff_mini,required:false,label:false, prompt: "Tide maximum height", collection: 20..120 %>
       <%= f.input :coeff_maxi,required:false,label:false, prompt: "Tide maximum height",collection: 20..120 %>
-      <%= f.input :wave_direction,required:false,as: :check_boxes, collection: ['N','NNW','NW','WNW','W','WSW','SW','SSW','S','SSE','SE','ESE','E','ENE','NE','NNE'] %>
+      <%= f.collection_check_boxes :wave_direction_ids, WaveDirection.all, :id, :direction do |b| %>
+        <div class="collection-check-box">
+          <%= b.check_box %>
+          <%= b.label %>
+        </div>
+      <% end %>
+
+      <%#= f.input :wave_direction,required:false,as: :check_boxes, collection: ['N','NNW','NW','WNW','W','WSW','SW','SSW','S','SSE','SE','ESE','E','ENE','NE','NNE'] %>
       <%= f.input :wave_height_mini,required:false,label:false, prompt: "minimum wave height (meters)", collection: 1..20 %>
       <%= f.input :wave_height_maxi,required:false,label:false, prompt: "maximum wave height (meters)", collection: 1..20 %>
       <%= f.input :periode_mini,required:false,label:false, prompt: "minimum period", collection: 1..20 %>

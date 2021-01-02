@@ -182,7 +182,7 @@ module Windfinder
 
 #methode qui regroupe les autres méthodes
   def self.dataset(url)
-    # Windfinder.load(url) #1
+    #Windfinder.load(url) #1
     file = Windfinder.create_nokogiri_file(url) #2
     name = Windfinder.create_name_file(url) #3
     puts "self.forecast check"
@@ -203,18 +203,18 @@ module Windfinder
   end
 
 
-  def self.sort_by_wind_direction(data, exposition)
+  def self.sort_by_wind_direction(data, spot)
   result = []
-  exposition = JSON.parse(exposition)
   data.each { |sess|
-    exposition.each { |exp|
-      if exp == sess[1][:wind_direction]
-          result << sess[1]
-        else
-        end
-      }
+    spot.wind_directions.each { |exp|
+      if exp.direction == sess[1][:wind_direction]
+        result << sess[1]
+      else
+      end
     }
-    result
+  }
+  puts "self.sort_by_wind_direction"
+  result
   end
 
   def self.sort_by_tide(data, tide_mini, tide_max)
@@ -244,6 +244,10 @@ module Windfinder
     puts"self.sort(data)"
     data1 = Windfinder.sort_by_sun_hour(data)
     data2 = Windfinder.sort_by_wind_force(data1)
+  end
+
+  def self.test(data, spot)
+
   end
 
 end
