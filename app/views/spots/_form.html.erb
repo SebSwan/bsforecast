@@ -12,13 +12,13 @@
       <%#= f.input :wind_direction,required:false, as: :check_boxes, collection: Spot::DIRECTION %>
       <%= f.input :wind_force_mini,required:false, label:false, prompt: "Wind Force Minimum (Knots)", collection: 1..45 %>
       <%= f.input :wind_force_maxi,required:false, label:false, prompt: "Wind Force Maximum (Knots)", collection: 1..45 %>
-      <%= f.input :tide_mini,required:false, label:false, prompt: "Tide minimum height", collection: 1..12 %>
-      <%= f.input :tide_max,required:false, label:false, prompt: "Tide maximum height",collection: 1..12 %>
+      <%= f.input :tide_mini,required:false, label:false, prompt: "Tide minimum height", collection: 0..12 %>
+      <%= f.input :tide_max,required:false, label:false, prompt: "Tide maximum height",collection: 0..12 %>
       <%= f.input :low_tide,required:false %>
       <%= f.input :mid_tide,required:false %>
       <%= f.input :high_tide,required:false %>
-      <%= f.input :coeff_mini,required:false,label:false, prompt: "Tide maximum height", collection: 20..120 %>
-      <%= f.input :coeff_maxi,required:false,label:false, prompt: "Tide maximum height",collection: 20..120 %>
+      <%= f.input :coeff_mini,required:false,label:false, prompt: "minimum tide coeff", collection: 20..120 %>
+      <%= f.input :coeff_maxi,required:false,label:false, prompt: "maximum tide coeff",collection: 20..120 %>
       <%= f.collection_check_boxes :wave_direction_ids, WaveDirection.all, :id, :direction do |b| %>
         <div class="collection-check-box">
           <%= b.check_box %>

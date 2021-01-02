@@ -46,17 +46,26 @@ class SpotsController < ApplicationController
 
     @spot_list = Spot.all
 
-    url = @spot_list.first.windfinder
-    tide_mini = @spot_list.first.tide_mini
-    tide_max = @spot_list.first.tide_max
-    exposition = @spot_list.first.wind_direction
-    spot = @spot_list.first
+    # url = @spot_list.first.windfinder
 
-    data_set = Windfinder.dataset(url)
-    result1 = Windfinder.sort(data_set)
-    result2 = Windfinder.sort_by_tide(result1, tide_mini, tide_max)
-    @result = Windfinder.sort_by_wind_direction(result2, spot)
+    # spot = @spot_list.first
 
+    def WindfinderOneSpot(spot)
+      data_set = Windfinder.dataset(spot[:windfinder])
+      result1 = Windfinder.sort(data_set,spot)
+      result2 = Windfinder.sort_by_tide(result1, spot)
+      @result = Windfinder.sort_by_wind_direction(result2, spot)
+    end
+
+    def WindfinderMultiSpot(spot_list)
+      result = []
+      spot_list.each {|spot|
+        result << WindfinderOneSpot(spot)
+      }
+      result.flatten
+    end
+
+    @result = WindfinderMultiSpot(@spot_list)
     # @result = Windfinder.windfinder_forecast(url, tide_mini, tide_max, exposition)
 
 

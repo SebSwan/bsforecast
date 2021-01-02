@@ -18,7 +18,7 @@ module Windfinder
     fin = Time.now
     parsingtime = fin - debut
     puts "#{new_name} parsé en #{parsingtime} secondes"
-  end #self.load
+  end
 
   #2
   def self.create_nokogiri_file(url) #creation du fichier nokogiri
@@ -181,12 +181,19 @@ module Windfinder
   end
 
 #methode qui regroupe les autres méthodes
+
   def self.dataset(url)
-    #Windfinder.load(url) #1
+    # Windfinder.load(url) #1
     file = Windfinder.create_nokogiri_file(url) #2
     name = Windfinder.create_name_file(url) #3
     puts "self.forecast check"
     Windfinder.parsing_nokogiri_file(file, name) #4
+  end
+
+  def self.loadall(spot_list)
+    spot_list.each {|spot|
+        Windfinder.load(spot[:windfinder])
+      }
   end
 
   def self.sort_by_sun_hour(data)
@@ -197,9 +204,9 @@ module Windfinder
     tri_before_sun.each.select { |k, v| v[:hour].to_i < sunset }
   end
 
-  def self.sort_by_wind_force(data)
+  def self.sort_by_wind_force(data,spot)
     puts "self.sort_by_wind_force(data)"
-    data.each.select { |k, v| v[:wind_force] > 12}
+    data.each.select { |k, v| v[:wind_force] > spot[:wind_force_mini]}
   end
 
 
@@ -217,9 +224,11 @@ module Windfinder
   result
   end
 
-  def self.sort_by_tide(data, tide_mini, tide_max)
-    tide_mini = tide_mini - 1
+  def self.sort_by_tide(data, spot)
+    tide_max = spot[:tide_max]
+    tide_mini = spot[:tide_mini]
 
+    tide_mini = tide_mini - 1
 
     if data.first[1][:tide_height].nil? == false
       # puts "Tide data OK"
@@ -240,14 +249,10 @@ module Windfinder
   end
 
 
-  def self.sort(data)
+  def self.sort(data,spot)
     puts"self.sort(data)"
     data1 = Windfinder.sort_by_sun_hour(data)
-    data2 = Windfinder.sort_by_wind_force(data1)
-  end
-
-  def self.test(data, spot)
-
+    data2 = Windfinder.sort_by_wind_force(data1,spot)
   end
 
 end
