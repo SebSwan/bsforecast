@@ -186,7 +186,7 @@ module Windfinder
     # Windfinder.load(url) #1
     file = Windfinder.create_nokogiri_file(url) #2
     name = Windfinder.create_name_file(url) #3
-    puts "self.forecast check"
+    puts "self.forecast check #{url}"
     Windfinder.parsing_nokogiri_file(file, name) #4
   end
 
@@ -199,14 +199,15 @@ module Windfinder
   def self.sort_by_sun_hour(data)
     rising_sun = 7
     sunset = 21
-    puts "self.sort_by_sun_hour(data)"
+    puts "self.sort_by_sun_hour(#{data.count})"
     tri_before_sun = data.each.each.select { |k, v| v[:hour].to_i > rising_sun }
     tri_before_sun.each.select { |k, v| v[:hour].to_i < sunset }
   end
 
   def self.sort_by_wind_force(data,spot)
-    puts "self.sort_by_wind_force(data)"
-    data.each.select { |k, v| v[:wind_force] > spot[:wind_force_mini]}
+    result = data.each.select { |k, v| v[:wind_force] > spot[:wind_force_mini]}
+    puts "self.sort_by_wind_force(#{result.count})"
+    result
   end
 
 
@@ -220,31 +221,51 @@ module Windfinder
       end
     }
   }
-  puts "self.sort_by_wind_direction"
+  puts "self.sort_by_wind_direction #{result.count}"
   result
   end
+
+  def self.sort_by_wave_direction(data, spot)
+  result = []
+  data.each { |sess|
+    spot.wave_directions.each { |exp|
+      if exp.direction == sess[1][:wave_direction]
+        result << sess[1]
+      else
+      end
+    }
+  }
+  puts "self.sort_by_wave_direction #{result.count}"
+  result
+  end
+
 
   def self.sort_by_tide(data, spot)
     tide_max = spot[:tide_max]
     tide_mini = spot[:tide_mini]
 
-    tide_mini = tide_mini - 1
+    if data!=[]
+      if data.first[1][:tide_height].nil? == false
+        puts "Tide data OK"
+        #tri par maree haute puis basse
+        tri_up_tide = data.each.each.select { |k, v| v[:tide_height] < tide_max}
 
-    if data.first[1][:tide_height].nil? == false
-      # puts "Tide data OK"
-      #tri par maree haute puis basse
-      tri_up_tide = data.each.each.select { |k, v| v[:tide_height] < tide_max}
+        puts "#{tri_up_tide.count}spot sous le seuil haut de marée"
 
-      # puts "#{tri_up_tide.count}spot sous le seuil haut de marée"
+        tri_low_tide = tri_up_tide.each.select { |k, v| v[:tide_height] > tide_mini}
 
-      tri_low_tide = tri_up_tide.each.select { |k, v| v[:tide_height] > tide_mini}
+        puts "#{tri_low_tide.count}spot au dessus du seuil bas de marée"
+        final_data = tri_low_tide
 
-      # puts "#{tri_low_tide.count}spot au dessus du seuil bas de marée"
-      final_data = tri_low_tide
+      else puts "Tide data empty"
+        final_data = data
+      end
 
-    else puts "Tide data empty"
+    else puts "no data []"
       final_data = data
     end
+
+    puts "self.sort_by_tide(data, spot) #{final_data.count}"
     final_data
   end
 
@@ -254,5 +275,29 @@ module Windfinder
     data1 = Windfinder.sort_by_sun_hour(data)
     data2 = Windfinder.sort_by_wind_force(data1,spot)
   end
+
+  def self.dataset_quick(url)
+    #load the url
+    debut = Time.now
+    new_name = url.split("/").last #take the last word of the string
+    raw_url = URI.open(url) #ouverture de l'url
+    #create a nokogiri file
+    doc = Nokogiri::HTML(raw_url) # create a Nokogiri::HTML::document
+    #parse the nokogiri file
+    weather_data = Windfinder.parsing_nokogiri_file(doc, new_name)
+    #create a file to store the weather data
+    data_file = File.new("/mnt/882A716B2A7156E2/0-Projets/7-forecastproject/bsforecast/data/windfinder_data/#{new_name}.json","w") #création du fichier de stockage
+    #serialize the weather_data file
+    serialized_json_data = weather_data.to_json
+    #send serialized data in the weather data storage file
+    data_file.puts serialized_json_data
+    #save and close the file
+    data_file.close
+    #performance
+    fin = Time.now
+    parsingtime = fin - debut
+    puts "#{new_name} parsé en #{parsingtime} secondes"
+  end
+
 
 end

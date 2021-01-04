@@ -60,6 +60,7 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     autoprefixer-rails (10.1.0.0)
       execjs
+    benchmark (0.1.1)
     better_errors (2.9.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
@@ -241,6 +242,7 @@ PLATFORMS
 
 DEPENDENCIES
   autoprefixer-rails
+  benchmark
   better_errors
   binding_of_caller
   bootsnap (>= 1.4.2)

@@ -29,6 +29,7 @@ gem 'simple_form'
 gem 'rack-mini-profiler'
 gem 'memory_profiler'
 gem 'stackprof'
+gem 'benchmark'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
