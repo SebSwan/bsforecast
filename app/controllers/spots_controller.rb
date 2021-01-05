@@ -46,22 +46,9 @@ class SpotsController < ApplicationController
 
     @spot_list = Spot.all
 
-    def WindfinderOneSpot(spot)
-      data_set = Windfinder.dataset(spot[:windfinder])
-      result1 = Windfinder.sort(data_set,spot)
-      result2 = Windfinder.sort_by_tide(result1, spot)
-      @result = Windfinder.sort_by_wind_direction(result2, spot)
-    end
 
-    def WindfinderMultiSpot(spot_list)
-      result = []
-      spot_list.each {|spot|
-        result << WindfinderOneSpot(spot)
-      }
-      result.flatten
-    end
 
-    @result = WindfinderMultiSpot(@spot_list)
+    @result = Windfinder.multi_spot(@spot_list)
     fin = Time.now
     @perf = fin - debut
   end
@@ -71,7 +58,7 @@ class SpotsController < ApplicationController
   private
 
   def spot_params
-    params.require(:spot).permit(:name, :sport, :configuration, :label, :latitude, :longitude, :wind_force_maxi, :wind_force_mini, :tide_mini, :tide_max, :low_tide, :mid_tide, :high_tide, :coeff_mini, :coeff_maxi, :wave_height_mini, :wave_height_maxi, :periode_mini, :periode_maxi, :windfinder, :windfindersuper, :shom, wind_direction_ids:[],wave_direction_ids:[])
+    params.require(:spot).permit(:name, :sport, :configuration, :label, :latitude, :longitude, :wind_force_maxi, :wind_force_mini, :tide_mini, :tide_max, :low_tide, :mid_tide, :high_tide, :coeff_mini, :coeff_maxi, :wave_height_mini, :wave_height_maxi, :periode_mini, :periode_maxi, :windfinder, :windfindersuper, :shom, :active, wind_direction_ids:[],wave_direction_ids:[])
   end
 
   def standard_data_set_params
