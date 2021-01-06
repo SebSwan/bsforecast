@@ -6,25 +6,27 @@
     <div class="col-10 white">
       <h1> resultat du wizard</h1>
       <ul>
+
       <% @result.each do |r|%>
        <%# <% binding.pry %>
         <li>
-          <%= r["name"] %>
+          <%=r["sport"].to_s[0] %>
+          <%=r["label"].to_s%>
+          <%# <%=r["name"] %>
           <%=r["day_name"]%>
           <%=r["time_stamp"].to_s %>
           <%=r["hour"].to_s %>
           <%=r["wind_force"].to_s %><%= " | " %><%= r["wind_gust"].to_s %>
-          <%= (r["wind_direction"]) %>
-          <%= (r["tide_height"]) == nil ? 'no-tide' :((r["tide_height"]).to_s+"m")%>
-          <%= r["tide_direction"] == nil ? 'no_tide' : ((r["tide_direction"]).to_s) %>
-          <%= (r["wave_direction"])==nil ? 'no_wave_dir' : (r["wave_direction"].to_s) %>
-          <%= (r["wave_height"]== nil ? 'no_wave' : (r["wave_height"]/(10.0)).to_s+"m")%>
-          <%= (r["wave_period"])== nil ? 'no_period' : (r["wave_period"].to_s+"sec")%>
-          <%= r["rain_mm"].to_s+'mm' %>
-          <%= r["temperature"].to_s+'°c' %>
-          <%= r["pression"].to_s+'Hpa' %>
+          <%=(r["wind_direction"]) %>
+          <%=(r["tide_height"]) == nil ? 'no-tide' :((r["tide_height"]).to_s+"m")%>
+          <%=r["tide_direction"] == nil ? 'no_tide' : ((r["tide_direction"]).to_s) %>
+          <%=(r["wave_direction"])==nil ? 'no_wave_dir' : (r["wave_direction"].to_s) %>
+          <%=(r["wave_height"]== nil ? 'no_wave' : (r["wave_height"]/(10.0)).to_s+"m")%>
+          <%=(r["wave_period"])== nil ? 'no_period' : (r["wave_period"].to_s+"sec")%>
+          <%=r["rain_mm"].to_s+'mm' %>
+          <%=r["temperature"].to_s+'°c' %>
+          <%=r["pression"].to_s+'Hpa' %>
           <%=r["model"]  %>
-
         </li>
        <% end %>
       </ul>
