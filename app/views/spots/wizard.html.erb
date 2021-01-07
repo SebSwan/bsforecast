@@ -1,54 +1,25 @@
 <div class="container">
   <div class="row">
-    <div class="col-1">
+    <div class="col-3">
       <!-- vide -->
     </div>
-    <div class="col-10 white">
-      <h1>wizard</h1>
+    <div class="col-6 white">
+      <h1 class="text-center">Wizard</h1>
       <div>
 
-        <div class="accordion" id="accordion2">
-  <div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-        Collapsible Group Item #1
-      </a>
-    </div>
-    <div id="collapseOne" class="accordion-body collapse in">
-      <div class="accordion-inner">
-        Anim pariatur cliche...
       </div>
-    </div>
-  </div>
-      </div>
-      <ul>
+      <ul class="list-unstyled">
         <% if @result != nil %>
-          <% @result.each do |r|%>
-          <%# <% binding.pry %>
-            <li>
-              <%=r["sport"].to_s[0] %>
-              <%=r["label"].to_s%>
-              <%# <%=r["name"] %>
-              <%=r["day_name"]%>
-              <%=r["time_stamp"].to_s %>
-              <%=r["hour"].to_s %>
-              <%=r["wind_force"].to_s %><%= " | " %><%= r["wind_gust"].to_s %>
-              <%=(r["wind_direction"]) %>
-              <%=(r["tide_height"]) == nil ? 'no-tide' :((r["tide_height"]).to_s+"m")%>
-              <%=r["tide_direction"] == nil ? 'no_tide' : ((r["tide_direction"]).to_s) %>
-              <%=(r["wave_direction"])==nil ? 'no_wave_dir' : (r["wave_direction"].to_s) %>
-              <%=(r["wave_height"]== nil ? 'no_wave' : (r["wave_height"]/(10.0)).to_s+"m")%>
-              <%=(r["wave_period"])== nil ? 'no_period' : (r["wave_period"].to_s+"sec")%>
-              <%=r["rain_mm"].to_s+'mm' %>
-              <%=r["temperature"].to_s+'°c' %>
-              <%=r["pression"].to_s+'Hpa' %>
-              <%=r["model"]  %>
-            </li>
+          <% @result.each_with_index do |r,index|%>
+
+            <%= render "session", locals: {:r => r, :index => index} %>
           <% end %>
       </ul>
+    <% end %>
 
-      <% end %>
-    <div> <%=   @result.count.to_s + " sessions" if @result !=nil %> </div>
+
+
+    <div> <%=   (@result.count + 1).to_s + " sessions" if @result !=nil %> </div>
 
       <div><%=  @perf %> </div>
 
@@ -56,13 +27,9 @@
       <div><%= link_to "options", options_path  %></div>
 
     </div>
-    <div class="col-1">
+    <div class="col-3">
       <!-- vide -->
     </div>
   </div>
 </div>
-
-      <%# <li> <%= r[:name] + ' ' + r[:day_name] + ' ' + r[:time_stamp].to_s + ' ' + r[:hour].to_s + ' ' + r[:wind_force].to_s + '|' + r[:wind_gust].to_s + ' ' + r[:wind_direction] + ' ' + (r[:tide_height] == nil ? 'no-tide' :(r[:tide_height] / 10.0).to_s+"m") +'|' + (r[:wave_height] / (10.0)).to_s + 'm ' + r[:wave_direction].to_s + 'deg ' + r[:wave_period].to_s + 's' + ' ' +r[:model] } %> </li> %>
-      <%# <li> <%= r[1][:name] + ' ' + r[1][:day_name] + ' ' + r[1][:time_stamp].to_s + ' ' + r[1][:hour].to_s + ' ' + r[1][:wind_force].to_s + '|' + r[1][:wind_gust].to_s + ' ' + r[1][:wind_direction] + ' ' + (r[1][:tide_height] == nil ? 'no-tide' :(r[1][:tide_height]).to_s+"m") +' | ' + (r[1][:wave_height] / (10.0)).to_s + ' m ' + r[1][:wave_direction].to_s + r[1][:wave_period].to_s + 's' + ' ' +r[1][:model] %> </li> %>
-
 
