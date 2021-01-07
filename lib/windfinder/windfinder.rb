@@ -181,9 +181,9 @@ module Windfinder
 
   #load all the .json from a spot_list (Spot.all)
   def self.load_all(spot_list)
-    spot_list.each {|spot|
-      spot[:active]==true ? (Windfinder.dataset_quick(spot[:windfinder])) : "#{spot[:label]} not loaded"
-    }
+    multi_url = spot_list.map {|x| x[:windfinder] if x[:active]==true} #array of wf link
+    uniq_url = multi_url.uniq #erase duplicate wf link
+    uniq_url.each {|url| Windfinder.dataset_quick(url)} #create .Json file
   end
 
   def self.one_spot(spot)
@@ -353,7 +353,6 @@ module Windfinder
       y.merge!("sport"=> spot["sport"])
       y.merge!("label"=> spot["label"])
     }
-
     #sort day and night
     weather_data = Windfinder.sort_by_sun_hour(weather_data)
     #sort by wind_force_mini
@@ -387,7 +386,10 @@ module Windfinder
 
   ###############################not validate######################################
 
+  def self.sort_by_timestamp(data)
+    data.sort_by! { |result| result["time_stamp"] }
 
+  end
 
 
   end

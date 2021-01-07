@@ -47,8 +47,10 @@ class SpotsController < ApplicationController
     @spot_list = Spot.all
 
 
+    temp_data = Windfinder.multi_spot(@spot_list)
+    @result = Windfinder.sort_by_timestamp(temp_data)
 
-    @result = Windfinder.multi_spot(@spot_list)
+
     fin = Time.now
     @perf = fin - debut
   end
