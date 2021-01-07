@@ -1,5 +1,6 @@
  <% r =  locals.first[1] %>
  <% index=locals[:index] %>
+ <% wavepower=[] %>
  <li>
     <div class="accordion session" id="accordion1">
       <div class="accordion-group">
@@ -15,7 +16,7 @@
             <%=(r["wind_direction"]) %>
             <%=(r["wave_direction"])==nil ? 'no_wave_dir' : (r["wave_direction"].to_s) %>
             <%=(r["wave_height"]== nil ? 'no_wave' : (r["wave_height"]/(10.0)).to_s+"m")%>
-            <%=(r["wave_period"])== nil ? 'no_period' : (r["wave_period"].to_s+"sec")%>
+            <%=(r["wave_period"])== nil ? 'no_period' : (r["wave_period"].to_s+"sec") %>
 
           </a>
         </div>
@@ -26,8 +27,10 @@
             <%=r["rain_mm"].to_s+'mm' %>
             <%=r["temperature"].to_s+'°c' %>
             <%=r["pression"].to_s+'Hpa' %>
+            <%= (r["wave_height"]== nil ? 'no_wave' : (r["wave_height"]/(10.0)).to_s+"m")%>
+            <% wavepower = (r["wave_height"]/(10.0))*(r["wave_period"]**2) if (r["wave_height"]!= nil)%>
+            <%= wavepower.to_i.to_s+'Watt'  %>
             <%=r["model"]  %>
-            <% index %>
         </div>
       </div>
     </div>

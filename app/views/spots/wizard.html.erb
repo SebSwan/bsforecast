@@ -12,11 +12,23 @@
         <% if @result != nil %>
           <% @result.each_with_index do |r,index|%>
 
-            <%= render "session", locals: {:r => r, :index => index} %>
+            <%= render "session", locals: {r: r, index: index} %>
           <% end %>
       </ul>
     <% end %>
 
+    <span class="fa-rotate-0" style="display: inline-block;">
+        <i class="fas fa-location-arrow"></i>
+      </span>
+      <span class="fa-rotate-23" style="display: inline-block;">
+          <i class="fas fa-location-arrow"></i>
+        </span><span class="fa-rotate-45" style="display: inline-block;">
+        <i class="fas fa-location-arrow"></i>
+      </span><span class="fa-rotate-67" style="display: inline-block;">
+        <i class="fas fa-location-arrow"></i>
+      </span><span class="fa-rotate-90  " style="display: inline-block;">
+        <i class="fas fa-location-arrow"></i>
+      </span>
 
 
     <div> <%=   (@result.count + 1).to_s + " sessions" if @result !=nil %> </div>
