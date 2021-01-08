@@ -1,24 +1,34 @@
  <% r =  locals.first[1] %>
  <% index=locals[:index] %>
  <% wavepower=[] %>
- <li>
-    <div class="accordion session" id="accordion1">
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse<%=index%>">
-            <span class="badge badge-pill badge-dark"><%=r["sport"].to_s[0] %></span>
-            <%=r["label"].to_s%>
-            <%# <%=r["name"] %>
-            <%=r["day_name"]%>
-            <%=r["time_stamp"].to_s %>
-            <%=r["hour"].to_s %>
-            <%=r["wind_force"].to_s %><%= " | " %><%= r["wind_gust"].to_s %>
-            <%=(r["wind_direction"]) %>
-            <%=(r["wave_direction"])==nil ? 'no_wave_dir' : (r["wave_direction"].to_s) %>
-            <%=(r["wave_height"]== nil ? 'no_wave' : (r["wave_height"]/(10.0)).to_s+"m")%>
-            <%=(r["wave_period"])== nil ? 'no_period' : (r["wave_period"].to_s+"sec") %>
 
-          </a>
+<% if r["temperature"] > 6 %>
+ <% color="w#{r["wind_force"].to_s}" %>
+ <% gcolor="w#{r["wind_gust"].to_s}" %>
+ <% else %>
+ <% color="wcold" %>
+ <% gcolor="wcold" %>
+<% end %>
+
+ <li>
+    <div class="accordion session"  id="accordion1">
+      <div class="accordion-group">
+        <div class="accordion-heading" >
+          <div class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse<%=index%>">
+            <span class="badge badge-pill badge-dark"><%=r["sport"].to_s[0] %></span>
+            <%=r["hour"].to_s %>
+            <span class="label"><%=r["label"].to_s%></span>
+            <%# <%=r["name"] %>
+            <span class="wind">
+              <span class=<%= color %>> <%=r["wind_force"].to_s %> <%= " | " %></span> <span class=<%= gcolor%> > <%= r["wind_gust"].to_s %></span>
+              <%=(r["wind_direction"]) %>
+            </span>
+            <span class="wave">
+            <%=(r["wave_height"]== nil ? 'no_wave' : (r["wave_height"]/(10.0)).to_s+"m")%>
+            <%=(r["wave_direction"])==nil ? 'no_wave_dir' : (r["wave_direction"].to_s) %>
+            <%=(r["wave_period"])== nil ? 'no_period' : (r["wave_period"].to_s+"sec") %>
+            </span>
+          </div>
         </div>
       <div id="collapse<%=index%>" class="accordion-body collapse in">
         <div class="accordion-inner">

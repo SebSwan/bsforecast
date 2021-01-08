@@ -8,27 +8,31 @@
       <div>
 
       </div>
-      <ul class="list-unstyled">
-        <% if @result != nil %>
-          <% @result.each_with_index do |r,index|%>
+        <ul class="list-unstyled" >
+          <% if @result != nil %>
+          <% date = nil %>
+            <% @result.each_with_index do |r,index|%>
+              <% if date == nil || date != r["time_stamp"]%>
+                    <!-- afficher le time_stamp -->
+                    <%=r["day_name"].to_s %>
+                    <%=r["time_stamp"].to_s %>
+                    <!-- afficher la session -->
+                    <%= render "session", locals: {r: r, index: index} %>
+                    <!-- mettre à jour la variable "date" = result[Timestamp] -->
+                    <% date = r["time_stamp"] %>
+                    <!-- case = date -->
+      <%#= binding.pry %>
 
-            <%= render "session", locals: {r: r, index: index} %>
+                <% else %>
+                    <!-- afficher la session -->
+                    <%= render "session", locals: {r: r, index: index} %>
+              <% end %>
+            <% end %>
           <% end %>
-      </ul>
-    <% end %>
 
-    <span class="fa-rotate-0" style="display: inline-block;">
-        <i class="fas fa-location-arrow"></i>
-      </span>
-      <span class="fa-rotate-23" style="display: inline-block;">
-          <i class="fas fa-location-arrow"></i>
-        </span><span class="fa-rotate-45" style="display: inline-block;">
-        <i class="fas fa-location-arrow"></i>
-      </span><span class="fa-rotate-67" style="display: inline-block;">
-        <i class="fas fa-location-arrow"></i>
-      </span><span class="fa-rotate-90  " style="display: inline-block;">
-        <i class="fas fa-location-arrow"></i>
-      </span>
+        </ul>
+
+
 
 
     <div> <%=   (@result.count + 1).to_s + " sessions" if @result !=nil %> </div>
@@ -45,3 +49,16 @@
   </div>
 </div>
 
+
+    <!-- <span class="fa-rotate-0" style="display: inline-block;">
+        <i class="fas fa-location-arrow"></i>
+      </span>
+      <span class="fa-rotate-23" style="display: inline-block;">
+          <i class="fas fa-location-arrow"></i>
+        </span><span class="fa-rotate-45" style="display: inline-block;">
+        <i class="fas fa-location-arrow"></i>
+      </span><span class="fa-rotate-67" style="display: inline-block;">
+        <i class="fas fa-location-arrow"></i>
+      </span><span class="fa-rotate-90  " style="display: inline-block;">
+        <i class="fas fa-location-arrow"></i>
+      </span> -->

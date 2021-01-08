@@ -166,7 +166,7 @@ module Windfinder
     #parse the nokogiri file
     weather_data = Windfinder.parsing_nokogiri_file(doc, new_name)
     #create a file to store the weather data
-    data_file = File.new("/mnt/882A716B2A7156E2/0-Projets/7-forecastproject/bsforecast/data/windfinder_data/#{new_name}.json","w") #création du fichier de stockage
+    data_file = File.new(Rails.root.to_s << "/data/windfinder_data/#{new_name}.json","w") #création du fichier de stockage
     #serialize the weather_data file
     serialized_json_data = weather_data.to_json
     #send serialized data in the weather data storage file
@@ -201,7 +201,7 @@ module Windfinder
   end
 
   def self.convert_json_to_data(file_name)
-    data_file = File.read("/mnt/882A716B2A7156E2/0-Projets/7-forecastproject/bsforecast/data/windfinder_data/#{file_name}.json")
+    data_file = File.read(Rails.root + "data/windfinder_data/#{file_name}.json")
     data_array = JSON.parse(data_file)
     puts" #{file_name} converted"
     data_array
