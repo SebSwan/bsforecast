@@ -46,38 +46,13 @@ class SpotsController < ApplicationController
 
     @spot_list = Spot.all
 
-    url = @spot_list.first.windfinder
-    tide_mini = @spot_list.first.tide_mini
-    tide_max = @spot_list.first.tide_max
-    exposition = @spot_list.first.wind_direction
 
-    data_set = Windfinder.dataset(url)
-    result1 = Windfinder.sort(data_set)
-    result2 = Windfinder.sort_by_tide(result1, tide_mini, tide_max)
-    @result = Windfinder.sort_by_wind_direction(result2, exposition)
-
-    # @result = Windfinder.windfinder_forecast(url, tide_mini, tide_max, exposition)
+    temp_data = Windfinder.multi_spot(@spot_list)
+    @result = Windfinder.sort_by_timestamp(temp_data)
 
 
-    # binding.pry
-    # @result.each do |model|
-    # StandardDataSet.create(
-    #   :spot_name => model[:name],
-    #   :model => model[:model],
-    #   :data_day_name => model[:day_name],
-    #   :data_time => DateTime.parse(model[:hour]),
-    #   :data_tide => DateTime.parse(model[:hour]),
-    #   :data_hour => DateTime.parse(model[:hour]),
-    #   :data_ws => model[:wind_force],
-    #   :data_wg => model[:wind_gust],
-    #   :data_wdeg => model[:wind_degree],
-    #   :data_wdir => model[:wave_direction]
-    # )
-
-    # end
-
-      fin = Time.now
-      @perf = fin - debut
+    fin = Time.now
+    @perf = fin - debut
   end
 
   def options; end
@@ -85,7 +60,7 @@ class SpotsController < ApplicationController
   private
 
   def spot_params
-    params.require(:spot).permit(:name, :sport, :configuration, :label, :latitude, :longitude, :wind_force_maxi, :wind_force_mini, :wind_direction, :tide_mini, :tide_max, :low_tide, :mid_tide, :high_tide, :coeff_mini, :coeff_maxi, :wave_direction, :wave_height_mini, :wave_height_maxi, :periode_mini, :periode_maxi, :windfinder, :windfindersuper, :shom )
+    params.require(:spot).permit(:name, :sport, :configuration, :label, :latitude, :longitude, :wind_force_maxi, :wind_force_mini, :tide_mini, :tide_max, :low_tide, :mid_tide, :high_tide, :coeff_mini, :coeff_maxi, :wave_height_mini, :wave_height_maxi, :periode_mini, :periode_maxi, :windfinder, :windfindersuper, :shom, :active, wind_direction_ids:[],wave_direction_ids:[])
   end
 
   def standard_data_set_params

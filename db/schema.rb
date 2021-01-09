@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_21_213101) do
+ActiveRecord::Schema.define(version: 2021_01_05_145149) do
 
   create_table "spots", force: :cascade do |t|
     t.string "name"
@@ -21,7 +21,6 @@ ActiveRecord::Schema.define(version: 2020_11_21_213101) do
     t.float "longitude"
     t.integer "wind_force_maxi"
     t.integer "wind_force_mini"
-    t.string "wind_direction"
     t.integer "tide_mini"
     t.integer "tide_max"
     t.boolean "low_tide"
@@ -29,7 +28,6 @@ ActiveRecord::Schema.define(version: 2020_11_21_213101) do
     t.boolean "high_tide"
     t.integer "coeff_mini"
     t.integer "coeff_maxi"
-    t.integer "wave_direction"
     t.integer "wave_height_mini"
     t.integer "wave_height_maxi"
     t.integer "periode_mini"
@@ -39,6 +37,17 @@ ActiveRecord::Schema.define(version: 2020_11_21_213101) do
     t.string "shom"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "active"
+  end
+
+  create_table "spots_wave_directions", id: false, force: :cascade do |t|
+    t.integer "spot_id", null: false
+    t.integer "wave_direction_id", null: false
+  end
+
+  create_table "spots_wind_directions", id: false, force: :cascade do |t|
+    t.integer "spot_id", null: false
+    t.integer "wind_direction_id", null: false
   end
 
   create_table "standard_data_sets", force: :cascade do |t|
@@ -52,6 +61,18 @@ ActiveRecord::Schema.define(version: 2020_11_21_213101) do
     t.integer "data_wg"
     t.integer "data_wdeg"
     t.integer "data_wdir"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "wave_directions", force: :cascade do |t|
+    t.string "direction"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "wind_directions", force: :cascade do |t|
+    t.string "direction"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

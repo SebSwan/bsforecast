@@ -6,13 +6,19 @@
     <div class="col-sm">
 
     <h1><%= @spot.name %></h1>
-    <p><%= @spot.configuration %></p>
+    <p><%= @spot.active %></p>
+    <%# <p><%= @spot.configuration %></p> %>
     <p><%= @spot.label %></p>
     <p><%= @spot.latitude %></p>
     <p><%= @spot.longitude %></p>
     <p><%= @spot.wind_force_maxi %></p>
     <p><%= @spot.wind_force_mini %></p>
-    <p><%= @spot.wind_direction %></p>
+    <p><%= @spot.wind_directions.class %></p>
+
+    <% @spot.wind_directions.each do |dir| %>
+    <p> <%= dir[:direction] %> </p>
+
+    <% end %>
     <p><%= @spot.tide_mini %></p>
     <p><%= @spot.tide_max %></p>
     <p><%= @spot.low_tide %></p>
@@ -20,7 +26,12 @@
     <p><%= @spot.high_tide %></p>
     <p><%= @spot.coeff_mini %></p>
     <p><%= @spot.coeff_maxi %></p>
-    <p><%= @spot.wave_direction %></p>
+    <p><%= @spot.wave_directions.class %></p>
+
+    <% @spot.wave_directions.each do |dir| %>
+    <p> <%= dir[:direction] %> </p>
+    <% end %>
+
     <p><%= @spot.wave_height_mini %></p>
     <p><%= @spot.wave_height_maxi %></p>
     <p><%= @spot.periode_mini %></p>

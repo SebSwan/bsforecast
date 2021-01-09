@@ -7,34 +7,12 @@ require 'open-uri'
 module Windfinder
   include Tools
 
-  #1
-  def self.load(link) #dowload HTML file in /local
-    debut = Time.now
-    new_name = link.split("/").last #récupérer la dernière string
-    doc = Nokogiri::HTML(URI.open(link)) #ouverture de l'url puis enregistrement de l'html
-    rawpage = File.new("/mnt/882A716B2A7156E2/0-Projets/7-forecastproject/bsforecast/data/windfinder_data/#{new_name}.html","w") #création du fichier de stockage
-    rawpage.puts doc #on envoie le fichier
-    rawpage.close
-    fin = Time.now
-    parsingtime = fin - debut
-    puts "#{new_name} parsé en #{parsingtime} secondes"
-  end #self.load
-
-  #2
-  def self.create_nokogiri_file(url) #creation du fichier nokogiri
-    new_name = url.split("/").last
-    puts"self.create_nokogiri_file(url)"
-    File.open("/mnt/882A716B2A7156E2/0-Projets/7-forecastproject/bsforecast/data/windfinder_data/#{new_name}.html") { |f| Nokogiri::HTML(f) }
-  end
-
-  #3
-  def self.create_name_file(url)
-    puts "self.create_name_file(url)"
-    url.split("/").last
-  end
-
-  #4
+  #reduce the Nokogir::html::document to an array of weather data
   def self.parsing_nokogiri_file(file, name)
+
+    #last update
+    update = file.css('#last-update').text
+
 
     new_name = name
     model_name = "wf"
@@ -53,7 +31,7 @@ module Windfinder
     file.search('.value').each do |link|
       if link.content.length == 5
         data_tide << link.content
-        else data_hours << link.content
+      else data_hours << link.content
       end
     end
 
@@ -148,15 +126,15 @@ module Windfinder
     i = 0
     j = 0
     num = data_ws.count
+    # :accuracy => "  ",
+    # :data_day => data_day_number[j.to_i],
+    # :month => data_day_month[j.to_i],
 
     while i < num
       global_data[i] = {
-        :accuracy => "  ",
         :name => new_name,
         :time_stamp => data_time[j.to_i],
         :day_name => data_day_name[j.to_i],
-        # :data_day => data_day_number[j.to_i],
-        # :month => data_day_month[j.to_i],
         :hour => data_hours[i],
         :wind_force => data_ws[i],
         :wind_gust => data_wg[i],
@@ -172,7 +150,8 @@ module Windfinder
         :rain_mm => data_rain[i],
         :pression => data_pression[i],
         :temperature => data_temp[i],
-        :model => model_name
+        :model => model_name,
+        :last_update => update
       }
       i += 1
       j += 0.125
@@ -180,70 +159,242 @@ module Windfinder
     return global_data
   end
 
-#methode qui regroupe les autres méthodes
-  def self.dataset(url)
-    # Windfinder.load(url) #1
-    file = Windfinder.create_nokogiri_file(url) #2
-    name = Windfinder.create_name_file(url) #3
-    puts "self.forecast check"
-    Windfinder.parsing_nokogiri_file(file, name) #4
+
+  #create a .json with weather data in windfinder_data
+  def self.dataset_quick(url)
+    #load the url
+    debut = Time.now
+    new_name = url.split("/").last #take the last word of the string
+    raw_url = URI.open(url) #ouverture de l'url
+    # create a Nokogiri::HTML::document
+    doc = Nokogiri::HTML(raw_url)
+    #parse the nokogiri file
+    weather_data = Windfinder.parsing_nokogiri_file(doc, new_name)
+    #create a file to store the weather data
+    data_file = File.new(Rails.root.to_s << "/data/windfinder_data/#{new_name}.json","w") #création du fichier de stockage
+    #serialize the weather_data file
+    serialized_json_data = weather_data.to_json
+    #send serialized data in the weather data storage file
+    data_file.puts serialized_json_data
+    #save and close the file
+    data_file.close
+    #performance
+    fin = Time.now
+    parsingtime = fin - debut
+    puts "#{new_name} parsé en #{parsingtime} secondes"
+  end
+
+  #load all the .json from a spot_list (Spot.all)
+  def self.load_all(spot_list)
+    multi_url = spot_list.map {|x| x[:windfinder] if x[:active]==true} #array of wf link
+    uniq_url = multi_url.uniq #erase duplicate wf link
+    uniq_url.each {|url| Windfinder.dataset_quick(url)} #create .Json file
+  end
+
+  def self.one_spot(spot)
+    data_set = Windfinder.wizard(spot)
+  end
+
+  def self.multi_spot(spot_list)
+    result = []
+    spot_list.each {|spot|
+       wizard=[]
+       spot[:active]==true ? wizard = Windfinder.one_spot(spot) : ("not loaded")
+       wizard.blank? ? (puts "no wizard") : (result << wizard)
+    }
+    result.flatten
+  end
+
+  def self.convert_json_to_data(file_name)
+    data_file = File.read(Rails.root + "data/windfinder_data/#{file_name}.json")
+    data_array = JSON.parse(data_file)
+    puts" #{file_name} converted"
+    data_array
   end
 
   def self.sort_by_sun_hour(data)
     rising_sun = 7
     sunset = 21
-    puts "self.sort_by_sun_hour(data)"
-    tri_before_sun = data.each.each.select { |k, v| v[:hour].to_i > rising_sun }
-    tri_before_sun.each.select { |k, v| v[:hour].to_i < sunset }
+    tri_before_sun = data.each.each.select { |k, v| v["hour"].to_i > rising_sun }
+    result_array = tri_before_sun.each.select { |k, v| v["hour"].to_i < sunset }
+    puts "self.sort_by_sun_hour(#{result_array.count})"
+    result_array
   end
 
-  def self.sort_by_wind_force(data)
-    puts "self.sort_by_wind_force(data)"
-    data.each.select { |k, v| v[:wind_force] > 12}
-  end
-
-
-  def self.sort_by_wind_direction(data, exposition)
-  result = []
-  exposition = JSON.parse(exposition)
-  data.each { |sess|
-    exposition.each { |exp|
-      if exp == sess[1][:wind_direction]
-          result << sess[1]
-        else
-        end
-      }
-    }
+  def self.sort_by_wind_force_mini(data,spot)
+    result = data.each.select { |k, v| v["wind_force"] > spot["wind_force_mini"]}
+    puts "self.sort_by_wind_force_mini(#{result.count})"
     result
   end
 
-  def self.sort_by_tide(data, tide_mini, tide_max)
-    tide_mini = tide_mini - 1
+  def self.sort_by_wind_force_maxi(data,spot)
+    result = data.each.select { |k, v| v["wind_force"] < spot["wind_force_maxi"]}
+    puts "self.sort_by_wind_force_maxi(#{result.count})"
+    result
+  end
 
+  def self.sort_by_wind_direction(data, spot)
+    result = []
+    data.each { |sess|
+      spot.wind_directions.each { |exp|
+        if exp.direction == sess[1]["wind_direction"]
+        result << sess[1]
+      else
+      end
+    }
+  }
+  puts "self.sort_by_wind_direction (#{result.count})"
+  result
+  end
 
-    if data.first[1][:tide_height].nil? == false
-      # puts "Tide data OK"
-      #tri par maree haute puis basse
-      tri_up_tide = data.each.each.select { |k, v| v[:tide_height] < tide_max}
-
-      # puts "#{tri_up_tide.count}spot sous le seuil haut de marée"
-
-      tri_low_tide = tri_up_tide.each.select { |k, v| v[:tide_height] > tide_mini}
-
-      # puts "#{tri_low_tide.count}spot au dessus du seuil bas de marée"
-      final_data = tri_low_tide
-
-    else puts "Tide data empty"
-      final_data = data
+  def self.sort_by_tide_mini(data, spot)
+    tide_mini = spot[:tide_mini]
+    if data !=[]
+      case data.first["tide_height"]
+        when 0..13
+          puts "Tide data OK"
+          tide_sorted = data.each.select { |v| v["tide_height"] > tide_mini}
+          puts "(#{tide_sorted.count}) spot up to low tide"
+          data = tide_sorted
+        when nil
+          puts "no Tide data in .JSON"
+        data
+        else
+          puts "no data, weather_data = []"
+          puts "////////////////////////tide stuff to solve////////////////////////////"
+          puts data
+        data
+      end
     end
-    final_data
+    data
+  end
+
+  def self.sort_by_tide_max(data, spot)
+    tide_max = spot[:tide_max]
+    if data!=[]
+      case data.first["tide_height"]
+      when 0..13
+        puts "Tide data OK"
+        tide_sorted = data.each.select { |v| v["tide_height"] < tide_max}
+        puts "(#{tide_sorted.count}) spot under the up tide level"
+        data = tide_sorted
+      when nil
+        puts "no Tide data in .JSON"
+        data
+      else
+        puts "no data, weather_data = []"
+        puts "////////////////////////tide stuff////////////////////////////"
+        puts data
+        data
+      end
+    end
+    data
+  end
+
+  def self.sort_by_wave_direction(data, spot)
+    result = []
+    data.each { |sess|
+      spot.wave_directions.each { |exp|
+        if exp.direction == sess["wave_direction"]
+        result << sess
+      else
+      end
+    }
+  }
+    puts "self.sort_by_wave_direction (#{result.count})"
+    result
+  end
+
+  def self.sort_by_wave_height_mini(data,spot)
+    if data!=[]
+      result = data.each.select { |k| (k["wave_height"]/10.0) > spot["wave_height_mini"]}
+      puts "self.sort_by_wave_height_mini(#{result.count})"
+    else
+      puts "no data, weather_data = []"
+      result = data
+    end
+    result
+  end
+
+  def self.sort_by_wave_height_maxi(data,spot)
+    if data!=[]
+      result = data.each.select { |k| (k["wave_height"]/10.0) < spot["wave_height_maxi"]}
+      puts "self.sort_by_wave_height_maxi(#{result.count})"
+    else
+      puts "no data, weather_data = []"
+      result = data
+    end
+    result
+  end
+
+  def self.sort_by_wave_period_mini(data,spot)
+    if data!=[]
+      result = data.each.select { |k| (k["wave_period"]) > spot["periode_mini"]}
+      puts "self.sort_by_wave_period_mini(#{result.count})"
+    else
+      puts "no data, weather_data = []"
+      result = data
+    end
+    result
+  end
+
+  def self.sort_by_wave_period_maxi(data,spot)
+      if data!=[]
+        result = data.each.select { |k| (k["wave_period"]) < spot["periode_maxi"]}
+        puts "self.sort_by_wave_period_max(#{result.count})"
+      else
+        puts "no data, weather_data = []"
+        result = data
+      end
+      result
+  end
+  #sorting algorithm ->
+  def self.wizard(spot)
+    puts "///////////////////////#{spot[:label]}/////////////////////////////////////"
+    file_name = spot[:windfinder].split("/").last
+    weather_data = Windfinder.convert_json_to_data(file_name)
+    #add the sport attribute to the hash
+    weather_data.each {|x,y|
+      y.merge!("sport"=> spot["sport"])
+      y.merge!("label"=> spot["label"])
+    }
+    #sort day and night
+    weather_data = Windfinder.sort_by_sun_hour(weather_data)
+    #sort by wind_force_mini
+    spot[:wind_force_mini].nil? || spot[:wind_force_mini]==0 ? (puts 'no wind_force_mini') : (weather_data = Windfinder.sort_by_wind_force_mini(weather_data,spot))
+    #sort by wind_force_maxi
+    spot[:wind_force_maxi].nil? || spot[:wind_force_maxi]==0 ? (puts 'no wind_force_maxi') : (weather_data = Windfinder.sort_by_wind_force_maxi(weather_data,spot))
+    #sort by wave_direction
+    spot.wind_directions == [] ? (puts 'no wind direction') : (weather_data = Windfinder.sort_by_wind_direction(weather_data,spot))
+    #sort by tide_mini
+    spot[:tide_mini].nil? || spot[:tide_mini]==0 ? (puts 'no tide mini') : (weather_data = Windfinder.sort_by_tide_mini(weather_data,spot))
+    #sort by tide_max
+    spot[:tide_max].nil? || spot[:tide_maxi]==0 ? (puts 'no tide max') : (weather_data = Windfinder.sort_by_tide_max(weather_data,spot))
+    #sort by wave_direction
+    spot.wave_directions == [] ? (puts 'no wave direction') : (weather_data = Windfinder.sort_by_wave_direction(weather_data,spot))
+    #sort by wave_height_mini
+    spot[:wave_height_mini].nil? || spot[:wave_height_mini]==0  ? (puts 'no minimum wave height') : (weather_data = Windfinder.sort_by_wave_height_mini(weather_data,spot))
+    #sort by wave_height_maxi
+    spot[:wave_height_maxi].nil? || spot[:wave_height_maxi]==0  ? (puts 'no maximum wave height') : (weather_data = Windfinder.sort_by_wave_height_maxi(weather_data,spot))
+    #sort by wave_period_mini
+    spot[:periode_mini].nil? || spot[:periode_mini]==0  ? (puts 'no minimum wave period') : (weather_data = Windfinder.sort_by_wave_period_mini(weather_data,spot))
+    #sort by wave_period_maxi
+    spot[:periode_maxi].nil? || spot[:periode_maxi]==0  ? (puts 'no maximum wave period') : (weather_data = Windfinder.sort_by_wave_period_maxi(weather_data,spot))
+
+    weather_data.nil? ? (puts 'no weather data') : (puts "#{weather_data.count}")
+    weather_data.blank? ? (puts 'weather data empty') : (puts "#{weather_data.count}")
+
+    weather_data
   end
 
 
-  def self.sort(data)
-    puts"self.sort(data)"
-    data1 = Windfinder.sort_by_sun_hour(data)
-    data2 = Windfinder.sort_by_wind_force(data1)
+
+  ###############################not validate######################################
+
+  def self.sort_by_timestamp(data)
+    data.sort_by! { |result| result["time_stamp"] }
+
   end
 
-end
+
+  end
