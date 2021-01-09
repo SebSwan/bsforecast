@@ -10,6 +10,10 @@ module Windfinder
   #reduce the Nokogir::html::document to an array of weather data
   def self.parsing_nokogiri_file(file, name)
 
+    #last update
+    update = file.css('#last-update').text
+
+
     new_name = name
     model_name = "wf"
     data_day_name = []
@@ -146,7 +150,8 @@ module Windfinder
         :rain_mm => data_rain[i],
         :pression => data_pression[i],
         :temperature => data_temp[i],
-        :model => model_name
+        :model => model_name,
+        :last_update => update
       }
       i += 1
       j += 0.125
