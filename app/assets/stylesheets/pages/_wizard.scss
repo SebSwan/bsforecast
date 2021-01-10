@@ -18,6 +18,11 @@ a {
 //   border: solid grey 1px
 // }
 
+//  span {
+//   border: solid white 1px
+// }
+
+
 .session{
   background: #1E1E1E;
   border-radius: 5px;
@@ -25,16 +30,21 @@ a {
 }
 
 .label{
-  width: 150px;
+  width: 30%;
   display: inline-block;
 }
 
 .wind{
-  width: 100px;
+  width: 35%;
   display: inline-block;
 }
 
 .wave{
-  width: auto;
+  width: 45%;
   display: inline-block;
+}
+
+.accordion-session{
+  display: flex;
+  // justify-content: space-around;
 }
