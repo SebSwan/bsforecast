@@ -1,5 +1,6 @@
 
 require 'nokogiri'
+require 'pry'
 require 'date'
 require 'open-uri'
 
@@ -8,11 +9,13 @@ module Windfinder
 
   #reduce the Nokogir::html::document to an array of weather data
   def self.parsing_nokogiri_file(file, name)
+
     #last update
     update = file.css('#last-update').text
 
+
     new_name = name
-    model_name = "GFS"
+    model_name = "wf"
     data_day_name = []
     data_time = []
 

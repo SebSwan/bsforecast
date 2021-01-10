@@ -20,8 +20,8 @@
             <span class="label pl-1 d-flex align-items-center text-center"><%=r["label"].to_s%></span>
             <%# <%=r["name"] %>
             <span class="d-flex align-items-center wind ">
-              <span class="w<%= color %> pr-1"> <%=r["wind_force"].to_s %> <%= " | " %></span> <span class="w<%= gcolor %> pr-1" > <%= r["wind_gust"].to_s %></span>
               <p class="pl-1"></p> <%=(r["wind_direction"]) %>
+              <span class="w<%= color %> px-1"> <%=r["wind_force"].to_s %> <%= " | " %></span> <span class="w<%= gcolor %> pr-1" > <%= r["wind_gust"].to_s %></span>
             </span>
             <span class="d-flex align-items-center wave pl-2">
             <%=(r["wave_height"]== nil ? 'no_wave' : (r["wave_height"]/(10.0)).to_s+"m")%>

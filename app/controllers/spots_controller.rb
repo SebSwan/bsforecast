@@ -21,6 +21,7 @@ class SpotsController < ApplicationController
   def create
     @spot = Spot.new(spot_params)
     @spot.save
+
     redirect_to spots_path
     # show_path(@spot)
   end
