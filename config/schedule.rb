@@ -20,6 +20,6 @@
 # Learn more: http://github.com/javan/whenever
 set :chronic_options, hours24: true
 
-every 1.day, at: ['0:01', '6:01', '12:01', '18:01'] do
+every 1.day, at: ['0:01','0:45' , '6:01', '12:01', '18:01'] do
    runner "Windfinder.load_all(Spot.all)"
  end

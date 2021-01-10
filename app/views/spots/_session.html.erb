@@ -6,8 +6,8 @@
  <% color= r["wind_force"].to_s %>
  <% gcolor= r["wind_gust"].to_s %>
  <% else %>
- <% color="wcold" %>
- <% gcolor="wcold" %>
+ <% color= 'cold' %>
+ <% gcolor= 'cold' %>
 <% end %>
 
  <li>
@@ -16,8 +16,8 @@
         <div class="accordion-heading" >
           <div class="accordion-toggle accordion-session" data-toggle="collapse" data-parent="#accordion1" href="#collapse<%=index%>">
             <span class="pl-1 d-flex align-items-center" ><%=r["sport"].to_s[0] %></span>
-            <span class="pl-1 d-flex align-items-center"><%=r["hour"].to_s %></span>
-            <span class="label pl-1 d-flex align-items-center text-center"><%=r["label"].to_s%></span>
+            <span class="pl-2 d-flex align-items-center"><%=r["hour"].to_s %></span>
+            <span class="label pl-2 d-flex align-items-center text-center"><%=r["label"].to_s%></span>
             <%# <%=r["name"] %>
             <span class="d-flex align-items-center wind ">
               <p class="pl-1"></p> <%=(r["wind_direction"]) %>
