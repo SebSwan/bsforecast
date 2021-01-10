@@ -21,5 +21,8 @@ test:
   database: db/test.sqlite3
 
 production:
+  # <<: *default
+  # database: db/production.sqlite3
   <<: *default
-  database: db/production.sqlite3
+  url: <%= ENV['POSTGRESQL_ADDON_URI'] %>
+
