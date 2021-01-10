@@ -3,8 +3,8 @@
  <% wavepower=[] %>
 
 <% if r["temperature"] > 6 %>
- <% color="w#{r["wind_force"].to_s}" %>
- <% gcolor="w#{r["wind_gust"].to_s}" %>
+ <% color= r["wind_force"].to_s %>
+ <% gcolor= r["wind_gust"].to_s %>
  <% else %>
  <% color="wcold" %>
  <% gcolor="wcold" %>
@@ -14,16 +14,16 @@
     <div class="accordion session"  id="accordion1">
       <div class="accordion-group">
         <div class="accordion-heading" >
-          <div class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse<%=index%>">
-            <span class="badge badge-pill badge-dark"><%=r["sport"].to_s[0] %></span>
-            <%=r["hour"].to_s %>
-            <span class="label"><%=r["label"].to_s%></span>
+          <div class="accordion-toggle accordion-session" data-toggle="collapse" data-parent="#accordion1" href="#collapse<%=index%>">
+            <span class="pl-1 d-flex align-items-center" ><%=r["sport"].to_s[0] %></span>
+            <span class="pl-1 d-flex align-items-center"><%=r["hour"].to_s %></span>
+            <span class="label pl-1 d-flex align-items-center text-center"><%=r["label"].to_s%></span>
             <%# <%=r["name"] %>
-            <span class="wind">
-              <span class=<%= color %>> <%=r["wind_force"].to_s %> <%= " | " %></span> <span class=<%= gcolor%> > <%= r["wind_gust"].to_s %></span>
-              <%=(r["wind_direction"]) %>
+            <span class="d-flex align-items-center wind ">
+              <span class="w<%= color %> pr-1"> <%=r["wind_force"].to_s %> <%= " | " %></span> <span class="w<%= gcolor %> pr-1" > <%= r["wind_gust"].to_s %></span>
+              <p class="pl-1"></p> <%=(r["wind_direction"]) %>
             </span>
-            <span class="wave">
+            <span class="d-flex align-items-center wave pl-2">
             <%=(r["wave_height"]== nil ? 'no_wave' : (r["wave_height"]/(10.0)).to_s+"m")%>
             <%=(r["wave_direction"])==nil ? 'no_wave_dir' : (r["wave_direction"].to_s) %>
             <%=(r["wave_period"])== nil ? 'no_period' : (r["wave_period"].to_s+"sec") %>
