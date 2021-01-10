@@ -1,6 +1,5 @@
 
 require 'nokogiri'
-require 'pry'
 require 'date'
 require 'open-uri'
 
