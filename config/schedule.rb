@@ -1,5 +1,7 @@
  env :PATH, ENV['PATH']
  set :output, "log/cron_log.log"
+ set :runner_command, "rails runner"
+
 # Use this file to easily define all of your cron jobs.
 #
 # It's helpful, but not entirely necessary to understand cron before proceeding.
