@@ -17,12 +17,11 @@
 #   runner "AnotherModel.prune_old_records"
 # end
 
+
+# every 1.day, at: ['0:01' ,'2:15' '6:01', '12:01', '18:01'] do
 # Learn more: http://github.com/javan/whenever
 set :chronic_options, hours24: true
 
-every 1.day, at: ['0:01' ,'2:15' '6:01', '12:01', '18:01'] do
+every 10.minutes do
    runner "Windfinder.load_all(Spot.all)"
-
-:environment => :production
-
 end
