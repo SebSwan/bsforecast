@@ -1,9 +1,11 @@
+ env :PATH, ENV['PATH']
+ set :output, "log/cron_log.log"
 # Use this file to easily define all of your cron jobs.
 #
 # It's helpful, but not entirely necessary to understand cron before proceeding.
 # http://en.wikipedia.org/wiki/Cron
-set :output, "/mnt/882A716B2A7156E2/0-Projets/7-forecastproject/bsforecast/cron_log.log"
-
+# pth = Rails.root.join('cron_log.log').to_s
+# set :output, "#{pth}"
 
 set :chronic_options, hours24: true
 
