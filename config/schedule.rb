@@ -2,18 +2,16 @@
  set :output, "log/cron_log.log"
  set :runner_command, "rails runner"
 
-set :chronic_options, hours24: true
+  set :chronic_options, hours24: true
 
 every 1.day, at: ['0:01', '6:01', '12:01', '18:01'] do
-   runner "Windfinder.load_all(Spot.all)"
+  runner "Windfinder.load_all(Spot.all)"
 end
-
 
 # every 1.minutes do
 
 #   runner "Windfinder.test"
 # end
-
 
 # every 10.minutes do
 #
@@ -26,7 +24,6 @@ end
 # every 4.days do
 #   runner "AnotherModel.prune_old_records"
 # end
-
 
 # Learn more: http://github.com/javan/whenever
 

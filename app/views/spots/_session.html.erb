@@ -15,15 +15,15 @@
       <div class="accordion-group">
         <div class="accordion-heading" >
           <div class="accordion-toggle accordion-session" data-toggle="collapse" data-parent="#accordion1" href="#collapse<%=index%>">
-            <span class="pl-1 d-flex align-items-center" ><%=r["sport"].to_s[0] %></span>
-            <span class="pl-2 d-flex align-items-center"><%=r["hour"].to_s %></span>
-            <span class="label pl-2 d-flex align-items-center text-center"><%=r["label"].to_s%></span>
+            <span class="pl-1 d-flex align-items-center"><%=r["sport"].to_s[0] %></span>
+            <span class="px-1 d-flex align-items-center"><%=r["hour"].to_s %></span>
+            <span class="px-1 label pl-1 d-flex align-items-center text-center"><%=r["label"].to_s%></span>
             <%# <%=r["name"] %>
-            <span class="d-flex align-items-center wind ">
-              <p class="pl-1"></p> <%=(r["wind_direction"]) %>
+            <span class="px-1 d-flex align-items-center justify-content-center wind ">
+              <p class="pl-1"></p> <%=(r["wind_direction"]).to_s.ljust(3) %>
               <span class="w<%= color %> px-1"> <%=r["wind_force"].to_s %> <%= " | " %></span> <span class="w<%= gcolor %> pr-1" > <%= r["wind_gust"].to_s %></span>
             </span>
-            <span class="d-flex align-items-center wave pl-2">
+            <span class="d-flex align-items-center justify-content-start wave pl-2">
             <%=(r["wave_height"]== nil ? 'no_wave' : (r["wave_height"]/(10.0)).to_s+"m")%>
             <%=(r["wave_direction"])==nil ? 'no_wave_dir' : (r["wave_direction"].to_s) %>
             <%=(r["wave_period"])== nil ? 'no_period' : (r["wave_period"].to_s+"sec") %>
@@ -32,15 +32,26 @@
         </div>
       <div id="collapse<%=index%>" class="accordion-body collapse in">
         <div class="accordion-inner">
-            <%=(r["tide_height"]) == nil ? 'no-tide' :((r["tide_height"]).to_s+"m")%>
-            <%=r["tide_direction"] == nil ? 'no_tide' : ((r["tide_direction"]).to_s) %>
-            <%=r["rain_mm"].to_s+'mm' %>
-            <%=r["temperature"].to_s+'°c' %>
-            <%=r["pression"].to_s+'Hpa' %>
+            <div class="px-2" >
+              <span>Tide height: <%=(r["tide_height"]) == nil ? 'no-tide' :((r["tide_height"]).to_s+"m")%> </span>
+              <span> / <%=r["tide_direction"] == nil ? 'no_tide' : ((r["tide_direction"]).to_s) %></span>
+            </div>
+            <div class="px-2">
+              <span>Temp: <%=r["temperature"].to_s+'°c    ' %></span>
+              <span>Rain: <%=r["rain_mm"].to_s+'mm' %></span>
+            </div>
+            <div class="px-2">
+              <span>P°: <%=r["pression"].to_s+'Hpa' %></span>
+
+            </div>
             <% wavepower = (r["wave_height"]/(10.0))*(r["wave_period"]**2) if (r["wave_height"]!= nil)%>
-            <%= (wavepower.to_i) if wavepower!=[] %><%= " watt"if wavepower!=[] %>
-            <%=r["model"]  %>
-            <%=r["last_update"].to_s  %>
+            <div class="px-2">
+              <span> Wavepower: <%= (wavepower.to_i) if wavepower!=[] %><%= " watts"if wavepower!=[] %> </span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="px-2 model">model: <%=r["model"]  %> </span>
+              <span class="px-2 update align-self-end">Last update: <%=r["last_update"].to_s  %></span>
+            </div>
 
         </div>
       </div>
