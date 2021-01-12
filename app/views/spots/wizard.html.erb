@@ -4,7 +4,9 @@
       <!-- vide -->
     </div>
     <div class="col-xs-12 col-md-6 white">
-      <h1 class="text-center">Wizard</h1>
+      <div >
+        <%= image_tag("blackswan_logo.png",class: "mx-auto d-block")%>
+      </div>
       <div>
 
       </div>
@@ -36,10 +38,12 @@
 
     <div> <%=   (@result.count + 1).to_s + " sessions" if @result !=nil %> </div>
 
-      <div><%=  @perf %> </div>
+      <div><%=  @perf %> <span> secondes </span> </div>
 
       <div><%#= link_to "spot list",spots_path  %></div>
       <div><%#= link_to "options", options_path  %></div>
+      <div>Version 0.1 </div>
+      <div>Made with <span style="color: Tomato"> <i class="fas fa-heart fa-pulse"></i></span> by Séb</div>
 
     </div>
     <div class="col-0 col-md-3">
