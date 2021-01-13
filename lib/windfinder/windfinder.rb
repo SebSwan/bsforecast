@@ -392,13 +392,14 @@ module Windfinder
   ###############################not validate######################################
 
   def self.sort_by_timestamp(data)
-    data.sort_by! { |result| result["time_stamp"] }
+    data.sort_by! { |result| [result['time_stamp'], result['hour']] }
 
   end
 
   def self.test
     puts "####################################################"
     puts "##################WHENEVER WORK####################"
+    puts "#{Date.now}"
     puts "####################################################"
 
   end
