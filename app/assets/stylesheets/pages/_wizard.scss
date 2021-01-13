@@ -19,7 +19,7 @@ a {
 // }
 
 //  span {
-//   border: solid white 1px
+//   border: solid orange 1px
 // }
 
 
@@ -34,17 +34,44 @@ a {
   display: inline-block;
 }
 
+
+
 .wind{
+  width: 35%;
+  display: inline;
+}
+
+.wave{
   width: 35%;
   display: inline-block;
 }
 
-.wave{
-  width: 45%;
-  display: inline-block;
+@media (max-width: 400px) {
+  .wind {
+    width: 190px;
+    // display: inline-block;
+    }
+    /* CSS goes here */
 }
 
 .accordion-session{
   display: flex;
+
   // justify-content: space-around;
 }
+
+.update {
+    font-style:italic;
+}
+// .separation{
+//   display: flex;
+//   flex-wrap: wrap;
+//   flex:1;
+// }
+
+// hr {
+//   // flex: 0 0 100%;
+//   border: 1px solid white;
+//   width:50%;
+
+// }
