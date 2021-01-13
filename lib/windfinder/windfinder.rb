@@ -213,8 +213,8 @@ module Windfinder
   end
 
   def self.sort_by_sun_hour(data)
-    rising_sun = 7
-    sunset = 21
+    rising_sun = 8
+    sunset = 18
     tri_before_sun = data.each.each.select { |k, v| v["hour"].to_i > rising_sun }
     result_array = tri_before_sun.each.select { |k, v| v["hour"].to_i < sunset }
     puts "self.sort_by_sun_hour(#{result_array.count})"
@@ -399,7 +399,7 @@ module Windfinder
   def self.test
     puts "####################################################"
     puts "##################WHENEVER WORK####################"
-    puts "#{Date.now}"
+    puts "#{Time.now}"
     puts "####################################################"
 
   end
