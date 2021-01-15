@@ -4,14 +4,13 @@
 
   set :chronic_options, hours24: true
 
-every 1.day, at: ['0:01', '6:01', '12:01', '18:01'] do
+every 1.day, at: ['5:01', '11:01', '17:01','23:01'] do
   runner "Windfinder.load_all(Spot.all)"
 end
 
-# every 1.minutes do
-
-#   runner "Windfinder.test"
-# end
+every 1.hours do
+  runner "Windfinder.test"
+end
 
 # every 10.minutes do
 #

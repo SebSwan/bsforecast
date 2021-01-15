@@ -1,5 +1,6 @@
 
 require 'nokogiri'
+require 'pry'
 require 'date'
 require 'open-uri'
 
@@ -8,11 +9,13 @@ module Windfinder
 
   #reduce the Nokogir::html::document to an array of weather data
   def self.parsing_nokogiri_file(file, name)
+
     #last update
     update = file.css('#last-update').text
 
+
     new_name = name
-    model_name = "GFS"
+    model_name = "wf"
     data_day_name = []
     data_time = []
 
@@ -160,28 +163,25 @@ module Windfinder
   #create a .json with weather data in windfinder_data
   def self.dataset_quick(url)
     #load the url
-    if url != nil
-      debut = Time.now
-      new_name = url.split("/").last #take the last word of the string
-      raw_url = URI.open(url) #ouverture de l'url
-      # create a Nokogiri::HTML::document
-      doc = Nokogiri::HTML(raw_url)
-      #parse the nokogiri file
-      weather_data = Windfinder.parsing_nokogiri_file(doc, new_name)
-      #create a file to store the weather data
-      data_file = File.new(Rails.root.to_s << "/data/windfinder_data/#{new_name}.json","w") #création du fichier de stockage
-      #serialize the weather_data file
-      serialized_json_data = weather_data.to_json
-      #send serialized data in the weather data storage file
-      data_file.puts serialized_json_data
-      #save and close the file
-      data_file.close
-      #performance
-      fin = Time.now
-      parsingtime = fin - debut
-      puts "#{new_name} parsé en #{parsingtime} secondes"
-    else puts "url = nil"
-    end
+    debut = Time.now
+    new_name = url.split("/").last #take the last word of the string
+    raw_url = URI.open(url) #ouverture de l'url
+    # create a Nokogiri::HTML::document
+    doc = Nokogiri::HTML(raw_url)
+    #parse the nokogiri file
+    weather_data = Windfinder.parsing_nokogiri_file(doc, new_name)
+    #create a file to store the weather data
+    data_file = File.new(Rails.root.to_s << "/data/windfinder_data/#{new_name}.json","w") #création du fichier de stockage
+    #serialize the weather_data file
+    serialized_json_data = weather_data.to_json
+    #send serialized data in the weather data storage file
+    data_file.puts serialized_json_data
+    #save and close the file
+    data_file.close
+    #performance
+    fin = Time.now
+    parsingtime = fin - debut
+    puts "#{new_name} parsé en #{parsingtime} secondes"
   end
 
   #load all the .json from a spot_list (Spot.all)
@@ -213,8 +213,8 @@ module Windfinder
   end
 
   def self.sort_by_sun_hour(data)
-    rising_sun = 8
-    sunset = 18
+    rising_sun = 7
+    sunset = 21
     tri_before_sun = data.each.each.select { |k, v| v["hour"].to_i > rising_sun }
     result_array = tri_before_sun.each.select { |k, v| v["hour"].to_i < sunset }
     puts "self.sort_by_sun_hour(#{result_array.count})"
@@ -392,19 +392,9 @@ module Windfinder
   ###############################not validate######################################
 
   def self.sort_by_timestamp(data)
-    data.sort_by! { |result| [result['time_stamp'], result['hour']] }
+    data.sort_by! { |result| result["time_stamp"] }
 
   end
-
-  def self.test
-    puts "####################################################"
-    puts "##################WHENEVER WORK####################"
-    puts "#{Time.now}"
-    puts "####################################################"
-
-  end
-
-
 
 
   end
