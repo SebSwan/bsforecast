@@ -2,6 +2,8 @@
 require 'nokogiri'
 require 'date'
 require 'open-uri'
+require 'active_support/core_ext/object/blank.rb'
+
 
 module Windfinder
   include Tools
