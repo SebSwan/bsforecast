@@ -357,7 +357,7 @@ module Windfinder
     weather_data = Windfinder.convert_json_to_data(file_name)
     # add tide in the data if not exist yet
     if spot[:tide_link].present?
-      weather_data = Windfinder.add_custom_tide(weather_data, spot['tide_link'])
+      weather_data = Windfinder.add_custom_tide(weather_data, spot[:tide_link])
     else
       puts 'not custom tide data detected'
     end
