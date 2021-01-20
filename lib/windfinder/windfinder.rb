@@ -184,11 +184,13 @@ module Windfinder
     end
   end
 
-  #load all the .json from a spot_list (Spot.all)
+  # load all the .json from a spot_list (Spot.all)
   def self.load_all(spot_list)
-    multi_url = spot_list.map {|x| x[:windfinder] if x[:active]==true} #array of wf link
-    uniq_url = multi_url.uniq #erase duplicate wf link
-    uniq_url.each {|url| Windfinder.dataset_quick(url)} #create .Json file
+    multi_url = spot_list.map { |x| x[:windfinder] if x[:active] == true } # array of wf link
+    tide_url = spot_list.map { |x| x[:tide_link] if x[:active] == true } # array of wf link
+    multi_url += tide_url.reject(&:empty?) # reject empty string and add link to main object
+    uniq_url = multi_url.uniq # erase duplicate wf link
+    uniq_url.each { |url| Windfinder.dataset_quick(url) } # create .Json file
   end
 
   def self.one_spot(spot)
@@ -197,10 +199,10 @@ module Windfinder
 
   def self.multi_spot(spot_list)
     result = []
-    spot_list.each {|spot|
-       wizard=[]
-       spot[:active]==true ? wizard = Windfinder.one_spot(spot) : ("not loaded")
-       wizard.blank? ? (puts "no wizard") : (result << wizard)
+    spot_list.each { |spot|
+      wizard = []
+      spot[:active] == true ? wizard = Windfinder.one_spot(spot) : ("not loaded")
+      wizard.blank? ? (puts "no wizard") : (result << wizard)
     }
     result.flatten
   end
@@ -236,11 +238,11 @@ module Windfinder
   def self.sort_by_wind_direction(data, spot)
     result = []
     data.each { |sess|
-      spot.wind_directions.each { |exp|
-        if exp.direction == sess[1]["wind_direction"]
+     spot.wind_directions.each { |exp|
+       if exp.direction == sess[1]["wind_direction"]
         result << sess[1]
-      else
-      end
+     else
+    end
     }
   }
   puts "self.sort_by_wind_direction (#{result.count})"
@@ -353,47 +355,64 @@ module Windfinder
     puts "///////////////////////#{spot[:label]}/////////////////////////////////////"
     file_name = spot[:windfinder].split("/").last
     weather_data = Windfinder.convert_json_to_data(file_name)
-    #add the sport attribute to the hash
-    weather_data.each {|x,y|
-      y.merge!("sport"=> spot["sport"])
-      y.merge!("label"=> spot["label"])
-    }
-    #sort day and night
-    weather_data = Windfinder.sort_by_sun_hour(weather_data)
-    #sort by wind_force_mini
-    spot[:wind_force_mini].nil? || spot[:wind_force_mini]==0 ? (puts 'no wind_force_mini') : (weather_data = Windfinder.sort_by_wind_force_mini(weather_data,spot))
-    #sort by wind_force_maxi
-    spot[:wind_force_maxi].nil? || spot[:wind_force_maxi]==0 ? (puts 'no wind_force_maxi') : (weather_data = Windfinder.sort_by_wind_force_maxi(weather_data,spot))
-    #sort by wave_direction
-    spot.wind_directions == [] ? (puts 'no wind direction') : (weather_data = Windfinder.sort_by_wind_direction(weather_data,spot))
-    #sort by tide_mini
-    spot[:tide_mini].nil? || spot[:tide_mini]==0 ? (puts 'no tide mini') : (weather_data = Windfinder.sort_by_tide_mini(weather_data,spot))
-    #sort by tide_max
-    spot[:tide_max].nil? || spot[:tide_maxi]==0 ? (puts 'no tide max') : (weather_data = Windfinder.sort_by_tide_max(weather_data,spot))
-    #sort by wave_direction
-    spot.wave_directions == [] ? (puts 'no wave direction') : (weather_data = Windfinder.sort_by_wave_direction(weather_data,spot))
-    #sort by wave_height_mini
-    spot[:wave_height_mini].nil? || spot[:wave_height_mini]==0  ? (puts 'no minimum wave height') : (weather_data = Windfinder.sort_by_wave_height_mini(weather_data,spot))
-    #sort by wave_height_maxi
-    spot[:wave_height_maxi].nil? || spot[:wave_height_maxi]==0  ? (puts 'no maximum wave height') : (weather_data = Windfinder.sort_by_wave_height_maxi(weather_data,spot))
-    #sort by wave_period_mini
-    spot[:periode_mini].nil? || spot[:periode_mini]==0  ? (puts 'no minimum wave period') : (weather_data = Windfinder.sort_by_wave_period_mini(weather_data,spot))
-    #sort by wave_period_maxi
-    spot[:periode_maxi].nil? || spot[:periode_maxi]==0  ? (puts 'no maximum wave period') : (weather_data = Windfinder.sort_by_wave_period_maxi(weather_data,spot))
+    # add tide in the data if not exist yet
+    if spot[:tide_link].present?
+      weather_data = Windfinder.add_custom_tide(weather_data, spot['tide_link'])
+    else
+      puts 'not custom tide data detected'
+    end
 
-    weather_data.nil? ? (puts 'no weather data') : (puts "#{weather_data.count}")
+    # add the sport attribute to the hash
+    weather_data.each {|x, y|
+      y.merge!('sport' => spot['sport'])
+      y.merge!('label' => spot['label'])
+    }
+    # sort day and night
+    weather_data = Windfinder.sort_by_sun_hour(weather_data)
+    # sort by wind_force_mini
+    spot[:wind_force_mini].nil? || spot[:wind_force_mini] == 0 ? (puts 'no wind_force_mini') : (weather_data = Windfinder.sort_by_wind_force_mini(weather_data,spot))
+    # sort by wind_force_maxi
+    spot[:wind_force_maxi].nil? || spot[:wind_force_maxi] == 0 ? (puts 'no wind_force_maxi') : (weather_data = Windfinder.sort_by_wind_force_maxi(weather_data,spot))
+    # sort by wave_direction
+    spot.wind_directions == [] ? (puts 'no wind direction') : (weather_data = Windfinder.sort_by_wind_direction(weather_data,spot))
+    # sort by tide_mini
+    spot[:tide_mini].nil? || spot[:tide_mini] == 0 ? (puts 'no tide mini') : (weather_data = Windfinder.sort_by_tide_mini(weather_data,spot))
+    # sort by tide_max
+    spot[:tide_max].nil? || spot[:tide_maxi] == 0 ? (puts 'no tide max') : (weather_data = Windfinder.sort_by_tide_max(weather_data,spot))
+    # sort by wave_direction
+    spot.wave_directions == [] ? (puts 'no wave direction') : (weather_data = Windfinder.sort_by_wave_direction(weather_data,spot))
+    # sort by wave_height_mini
+    spot[:wave_height_mini].nil? || spot[:wave_height_mini] == 0  ? (puts 'no minimum wave height') : (weather_data = Windfinder.sort_by_wave_height_mini(weather_data,spot))
+    # sort by wave_height_maxi
+    spot[:wave_height_maxi].nil? || spot[:wave_height_maxi] == 0  ? (puts 'no maximum wave height') : (weather_data = Windfinder.sort_by_wave_height_maxi(weather_data,spot))
+    # sort by wave_period_mini
+    spot[:periode_mini].nil? || spot[:periode_mini] == 0  ? (puts 'no minimum wave period') : (weather_data = Windfinder.sort_by_wave_period_mini(weather_data,spot))
+    # sort by wave_period_maxi
+    spot[:periode_maxi].nil? || spot[:periode_maxi] == 0  ? (puts 'no maximum wave period') : (weather_data = Windfinder.sort_by_wave_period_maxi(weather_data,spot))
+
+    weather_data.nil? ? (puts 'no weather data') : (puts "# {weather_data.count}")
     weather_data.blank? ? (puts 'weather data empty') : (puts "#{weather_data.count}")
 
     weather_data
   end
 
-
-
   ###############################not validate######################################
 
   def self.sort_by_timestamp(data)
     data.sort_by! { |result| [result['time_stamp'], result['hour']] }
+  end
 
+  def self.add_custom_tide(json_file, tide_link)
+    # verifier si le fichier tide_link est present dans data/windfinder
+    tide_spot_name = tide_link.split("/").last
+    tide_spot = Windfinder.convert_json_to_data(tide_spot_name)
+    # si oui
+
+    json_file.each_with_index { |arr, index|
+            arr[1]['tide_height'] = tide_spot[index.to_s]['tide_height']
+            arr[1]['tide_direction'] = tide_spot[index.to_s]['tide_direction']
+            arr[1]['tide_hour'] = tide_spot[index.to_s]['tide_hour'] }
+    json_file
   end
 
   def self.test
@@ -401,10 +420,5 @@ module Windfinder
     puts "##################WHENEVER WORK####################"
     puts "#{Time.now}"
     puts "####################################################"
-
   end
-
-
-
-
-  end
+end
