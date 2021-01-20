@@ -190,7 +190,8 @@ module Windfinder
   def self.load_all(spot_list)
     multi_url = spot_list.map { |x| x[:windfinder] if x[:active] == true } # array of wf link
     tide_url = spot_list.map { |x| x[:tide_link] if x[:active] == true } # array of wf link
-    multi_url += tide_url.reject(&:empty?) # reject empty string and add link to main object
+    multi_url += tide_url.select { |x| x != "" }
+    # multi_url += tide_url.reject(&:empty?) # reject empty string and add link to main object
     uniq_url = multi_url.uniq # erase duplicate wf link
     uniq_url.each { |url| Windfinder.dataset_quick(url) } # create .Json file
   end
