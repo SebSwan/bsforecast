@@ -182,6 +182,7 @@ module Windfinder
       fin = Time.now
       parsingtime = fin - debut
       puts "#{new_name} parsé en #{parsingtime} secondes"
+      sleep(rand 5..10)
     else puts "url = nil"
     end
   end
@@ -402,7 +403,7 @@ module Windfinder
   ###############################not validate######################################
 
   def self.sort_by_timestamp(data)
-    data.sort_by! { |result| [result['time_stamp'], result['hour']] }
+    data.sort_by { |result| [result['time_stamp'], result['hour']] }
   end
 
   def self.add_custom_tide(json_file, tide_link)
