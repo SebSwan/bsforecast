@@ -182,7 +182,6 @@ module Windfinder
       fin = Time.now
       parsingtime = fin - debut
       puts "#{new_name} parsé en #{parsingtime} secondes"
-      sleep(rand 5..10)
     else puts "url = nil"
     end
   end
@@ -194,7 +193,9 @@ module Windfinder
     multi_url += tide_url.select { |x| x != "" }
     # multi_url += tide_url.reject(&:empty?) # reject empty string and add link to main object
     uniq_url = multi_url.uniq # erase  duplicate wf link
-    uniq_url.each { |url| Windfinder.dataset_quick(url) } # create .Json file
+    uniq_url.each { |url| Windfinder.dataset_quick(url)
+    sleep(rand 5..10)
+    } # create .Json file
   end
 
   def self.one_spot(spot)
