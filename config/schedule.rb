@@ -1,3 +1,6 @@
+require 'active_support/core_ext/object/blank.rb'
+
+
  env :PATH, ENV['PATH']
  set :output, "log/cron_log.log"
  set :runner_command, "rails runner"

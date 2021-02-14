@@ -2,6 +2,8 @@
 require 'nokogiri'
 require 'date'
 require 'open-uri'
+require 'active_support/core_ext/object/blank.rb'
+
 
 module Windfinder
   include Tools
@@ -188,9 +190,12 @@ module Windfinder
   def self.load_all(spot_list)
     multi_url = spot_list.map { |x| x[:windfinder] if x[:active] == true } # array of wf link
     tide_url = spot_list.map { |x| x[:tide_link] if x[:active] == true } # array of wf link
-    multi_url += tide_url.reject(&:empty?) # reject empty string and add link to main object
-    uniq_url = multi_url.uniq # erase duplicate wf link
-    uniq_url.each { |url| Windfinder.dataset_quick(url) } # create .Json file
+    multi_url += tide_url.select { |x| x != "" }
+    # multi_url += tide_url.reject(&:empty?) # reject empty string and add link to main object
+    uniq_url = multi_url.uniq # erase  duplicate wf link
+    uniq_url.each { |url| Windfinder.dataset_quick(url)
+    sleep(rand 5..10)
+    } # create .Json file
   end
 
   def self.one_spot(spot)
@@ -357,7 +362,7 @@ module Windfinder
     weather_data = Windfinder.convert_json_to_data(file_name)
     # add tide in the data if not exist yet
     if spot[:tide_link].present?
-      weather_data = Windfinder.add_custom_tide(weather_data, spot['tide_link'])
+      weather_data = Windfinder.add_custom_tide(weather_data, spot[:tide_link])
     else
       puts 'not custom tide data detected'
     end
@@ -399,7 +404,7 @@ module Windfinder
   ###############################not validate######################################
 
   def self.sort_by_timestamp(data)
-    data.sort_by! { |result| [result['time_stamp'], result['hour']] }
+    data.sort_by { |result| [result['time_stamp'], result['hour']] }
   end
 
   def self.add_custom_tide(json_file, tide_link)
