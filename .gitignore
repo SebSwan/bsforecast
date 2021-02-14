@@ -37,3 +37,4 @@ public/assets
 
 # Ignore Json from data created in locales
 /data/*
+.env*
